@@ -725,6 +725,3 @@ as long as `catalog.json` is unchanged, so existing seeds keep working.
   still on the slot-selection screen.
 * Missing `jellyfish`, `bsdiff4`, `pathspec`, `setuptools` errors come from
   running Archipelago with a Python env that is not `.tools/venv`.
-#   A P - S o u l s t o n e - S u r v i v o r 
- 
- 
