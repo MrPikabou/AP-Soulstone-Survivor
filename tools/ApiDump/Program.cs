@@ -98,8 +98,24 @@ internal static class Program
     {
         var r = new DefaultAssemblyResolver();
         r.AddSearchDirectory(System.IO.Path.GetDirectoryName(assemblyPath));
-        r.AddSearchDirectory(@"D:\SteamLibrary\steamapps\common\Soulstone Survivors\BepInEx\interop");
-        r.AddSearchDirectory(@"D:\SteamLibrary\steamapps\common\Soulstone Survivors\BepInEx\core");
+
+        // Game install: SOULSTONE_DIR, then the usual Steam libraries.
+        var candidates = new[]
+        {
+            Environment.GetEnvironmentVariable("SOULSTONE_DIR"),
+            Environment.GetEnvironmentVariable("GAME_DIR"),
+            @"C:\Program Files (x86)\Steam\steamapps\common\Soulstone Survivors",
+            @"C:\Program Files\Steam\steamapps\common\Soulstone Survivors",
+            @"D:\Steam\steamapps\common\Soulstone Survivors",
+            @"D:\SteamLibrary\steamapps\common\Soulstone Survivors",
+        };
+        foreach (var candidate in candidates)
+        {
+            if (string.IsNullOrEmpty(candidate) || !System.IO.Directory.Exists(candidate)) continue;
+            r.AddSearchDirectory(System.IO.Path.Combine(candidate, "BepInEx", "interop"));
+            r.AddSearchDirectory(System.IO.Path.Combine(candidate, "BepInEx", "core"));
+            break;
+        }
         return r;
     }
 

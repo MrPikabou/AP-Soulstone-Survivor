@@ -25,7 +25,26 @@ from tkinter import filedialog, messagebox, ttk
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARCHIPELAGO = os.path.join(HERE, ".tools", "archipelago")
 VENV_PYTHON = os.path.join(HERE, ".tools", "venv", "Scripts", "python.exe")
-GAME_DIR = os.environ.get("SOULSTONE_DIR", r"D:\SteamLibrary\steamapps\common\Soulstone Survivors")
+GAME_CANDIDATES = (
+    r"C:\Program Files (x86)\Steam\steamapps\common\Soulstone Survivors",
+    r"C:\Program Files\Steam\steamapps\common\Soulstone Survivors",
+    r"D:\Steam\steamapps\common\Soulstone Survivors",
+    r"D:\SteamLibrary\steamapps\common\Soulstone Survivors",
+)
+
+
+def find_game_dir() -> str:
+    """SOULSTONE_DIR wins, then the usual Steam libraries (same as env.sh)."""
+    override = os.environ.get("SOULSTONE_DIR")
+    if override:
+        return override
+    for candidate in GAME_CANDIDATES:
+        if os.path.isdir(candidate):
+            return candidate
+    return GAME_CANDIDATES[0]
+
+
+GAME_DIR = find_game_dir()
 GAME_EXE = os.path.join(GAME_DIR, "Soulstone Survivors.exe")
 CONFIG_PATH = os.path.join(HERE, "launcher.json")
 CLIENT_OUT = os.path.join(HERE, "launcher_client.log")
