@@ -33,6 +33,26 @@ NAME_PATTERN = re.compile(r"^[A-Za-z0-9_]{1,128}$")
 DEPENDENCY_PATTERN = re.compile(r"^[A-Za-z0-9_]+-[A-Za-z0-9_]+-(\d+\.\d+\.\d+)$")
 
 
+GAME_CANDIDATES = (
+    r"C:\Program Files (x86)\Steam\steamapps\common\Soulstone Survivors",
+    r"C:\Program Files\Steam\steamapps\common\Soulstone Survivors",
+    r"D:\Steam\steamapps\common\Soulstone Survivors",
+    r"D:\SteamLibrary\steamapps\common\Soulstone Survivors",
+)
+
+
+def game_dir():
+    """Same lookup env.sh does, so this works without sourcing it first."""
+    for key in ("SOULSTONE_DIR", "GAME_DIR"):
+        value = os.environ.get(key)
+        if value and os.path.isdir(value):
+            return value
+    for candidate in GAME_CANDIDATES:
+        if os.path.isdir(candidate):
+            return candidate
+    return None
+
+
 def plugin_version() -> str:
     source = open(PLUGIN_CS, encoding="utf-8").read()
     match = re.search(r'public const string Version = "([^"]+)"', source)
@@ -59,11 +79,14 @@ def build() -> None:
     })
     for path in (env["TEMP"], env["APPDATA"], env["LOCALAPPDATA"], env["DOTNET_CLI_HOME"], env["NUGET_PACKAGES"]):
         os.makedirs(path, exist_ok=True)
-    subprocess.run(
-        [dotnet, "build", os.path.join(ROOT, "mod", "SoulstoneAP.csproj"), "-c", "Release", "-v", "q", "--nologo"],
-        check=True,
-        env=env,
-    )
+    command = [dotnet, "build", os.path.join(ROOT, "mod", "SoulstoneAP.csproj"), "-c", "Release", "-v", "q", "--nologo"]
+    # Interop assemblies are read from the game install; tell MSBuild where it is.
+    found = game_dir()
+    if found:
+        command.append(f"-p:GameDir={found}")
+    else:
+        print("warning: game install not found - set SOULSTONE_DIR if the build fails", file=sys.stderr)
+    subprocess.run(command, check=True, env=env)
 
 
 def read_icon_size(path: str) -> tuple:

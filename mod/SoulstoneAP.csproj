@@ -10,7 +10,10 @@
     <RestorePackagesPath>$(MSBuildThisFileDirectory)../.tools/nuget</RestorePackagesPath>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <GameDir>D:\SteamLibrary\steamapps\common\Soulstone Survivors</GameDir>
+    <!-- Interop assemblies come from the game's own BepInEx folder. Set
+         SOULSTONE_DIR (env var) or pass -p:GameDir=... to override. -->
+    <GameDir Condition="'$(SOULSTONE_DIR)' != ''">$(SOULSTONE_DIR)</GameDir>
+    <GameDir Condition="'$(GameDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Soulstone Survivors</GameDir>
   </PropertyGroup>
 
   <ItemGroup>

@@ -507,6 +507,19 @@ bash deploy_world.sh    # copy the world package into .tools/archipelago/worlds
 python tools/dump_catalog.py   # only after a game update, with the game running
 ```
 
+No machine-specific paths are baked into the scripts. `env.sh` looks for the game
+in the usual Steam libraries and for the Mod Manager profile under `%APPDATA%`;
+override either one when the guess misses:
+
+```bash
+SOULSTONE_DIR="E:/Games/Soulstone Survivors" bash deploy.sh
+TSM_PROFILE="$APPDATA/r2modman/SoulstoneSurvivors/profiles/Default" bash deploy.sh
+```
+
+It also picks the .NET SDK from `.tools/dotnet` first (the system `dotnet` may be
+a runtime-only install, which fails with "The application 'build' does not
+exist"), then falls back to `PATH`.
+
 BepInEx 6 (IL2CPP, bleeding-edge) is installed in the game folder; the plugin
 lives in `BepInEx/plugins/SoulstoneAP.dll`. The plugin writes
 `BepInEx/config/soulstone.ap.bridge.cfg` — change `Port` or `AllowedProfileIndex`
