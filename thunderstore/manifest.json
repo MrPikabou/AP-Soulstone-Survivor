@@ -1,0 +1,9 @@
+{
+  "name": "SoulstoneArchipelago",
+  "version_number": "1.0.1",
+  "website_url": "",
+  "description": "In-game Archipelago multiworld client for Soulstone Survivors: characters, weapons, runes and maps as items, plus DeathLink, traps and a connect panel.",
+  "dependencies": [
+    "BepInEx-BepInExPack_IL2CPP-6.0.788"
+  ]
+}

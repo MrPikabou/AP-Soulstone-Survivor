@@ -1,0 +1,28 @@
+# Bundled toolchain: .NET SDK, Archipelago source, Python venv, NuGet cache
+.tools/
+
+# Personal save data (the baseline copy of the modding slot)
+backups/
+*.apsave
+
+# Generated seeds and packaging output
+output/
+out/
+build/
+dist/
+gen.log
+output-gen.log
+
+# Build artifacts (plugin and the ApiDump helper)
+bin/
+obj/
+
+# Python
+__pycache__/
+*.pyc
+
+# Local runtime state and logs
+*.log
+launcher.json
+server_cmds.txt
+client_cmds.txt

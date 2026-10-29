@@ -1,0 +1,4345 @@
+{
+ "characters": [
+  {
+   "id": "Barbarian",
+   "auto": true,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Pyromancer",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "HoundMaster",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Spellbreaker",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "ArcaneWeaver",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Sentinel",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Paladin",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Bloodmage",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Beastmaster",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Rogue",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Elementalist",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Legionnaire",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Necromancer",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "DeathKnight",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "MonkeyKing",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Engineer",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Myrmidon",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "DemonHunter",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Pirate",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Shaman",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Machinist",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Samurai",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  },
+  {
+   "id": "Blacksmith",
+   "auto": false,
+   "hidden": false,
+   "unavailable": false
+  }
+ ],
+ "weapons": [
+  {
+   "id": "WeaponBarbarian-01",
+   "character": "Barbarian",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "Whirlwind"
+  },
+  {
+   "id": "WeaponBarbarian-02",
+   "character": "Barbarian",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Shockwave"
+  },
+  {
+   "id": "WeaponBarbarian-03",
+   "character": "Barbarian",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ThunderingSlash"
+  },
+  {
+   "id": "WeaponBarbarian-04",
+   "character": "Barbarian",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "HeavyStrike"
+  },
+  {
+   "id": "WeaponBarbarian-05",
+   "character": "Barbarian",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FleshImpale"
+  },
+  {
+   "id": "WeaponPyromancer-01",
+   "character": "Pyromancer",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "FireSlash"
+  },
+  {
+   "id": "WeaponPyromancer-02",
+   "character": "Pyromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "LightningField"
+  },
+  {
+   "id": "WeaponPyromancer-03",
+   "character": "Pyromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ChaoticInferno"
+  },
+  {
+   "id": "WeaponPyromancer-04",
+   "character": "Pyromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "DarkSwarm"
+  },
+  {
+   "id": "WeaponPyromancer-05",
+   "character": "Pyromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "RunicEmber"
+  },
+  {
+   "id": "WeaponHoundMaster-01",
+   "character": "HoundMaster",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "MortarShot"
+  },
+  {
+   "id": "WeaponHoundMaster-02",
+   "character": "HoundMaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Buckshot"
+  },
+  {
+   "id": "WeaponHoundMaster-03",
+   "character": "HoundMaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "PesticideBurst"
+  },
+  {
+   "id": "WeaponHoundMaster-04",
+   "character": "HoundMaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "BoltBarrage"
+  },
+  {
+   "id": "WeaponHoundMaster-05",
+   "character": "HoundMaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "BlazehoundShot"
+  },
+  {
+   "id": "WeaponSpellbreaker-01",
+   "character": "Spellbreaker",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "ArcaneSlash"
+  },
+  {
+   "id": "WeaponSpellbreaker-02",
+   "character": "Spellbreaker",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Slash"
+  },
+  {
+   "id": "WeaponSpellbreaker-03",
+   "character": "Spellbreaker",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ArcticAssault"
+  },
+  {
+   "id": "WeaponSpellbreaker-04",
+   "character": "Spellbreaker",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Firestorm"
+  },
+  {
+   "id": "WeaponSpellbreaker-05",
+   "character": "Spellbreaker",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "PiercingTempest"
+  },
+  {
+   "id": "WeaponArcaneWeaver-01",
+   "character": "ArcaneWeaver",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "ArcaneMissiles"
+  },
+  {
+   "id": "WeaponArcaneWeaver-02",
+   "character": "ArcaneWeaver",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FieryMissiles"
+  },
+  {
+   "id": "WeaponArcaneWeaver-03",
+   "character": "ArcaneWeaver",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SacredOrb"
+  },
+  {
+   "id": "WeaponArcaneWeaver-04",
+   "character": "ArcaneWeaver",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FrostBeam"
+  },
+  {
+   "id": "WeaponArcaneWeaver-05",
+   "character": "ArcaneWeaver",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FracturedVolley"
+  },
+  {
+   "id": "WeaponSentinel-01",
+   "character": "Sentinel",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "Shoot"
+  },
+  {
+   "id": "WeaponSentinel-02",
+   "character": "Sentinel",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ExplosiveArrows"
+  },
+  {
+   "id": "WeaponSentinel-03",
+   "character": "Sentinel",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ObscureArrow"
+  },
+  {
+   "id": "WeaponSentinel-04",
+   "character": "Sentinel",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "NoxiousShot"
+  },
+  {
+   "id": "WeaponSentinel-05",
+   "character": "Sentinel",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FrozenSalvo"
+  },
+  {
+   "id": "WeaponPaladin-01",
+   "character": "Paladin",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "BladesOfLight"
+  },
+  {
+   "id": "WeaponPaladin-02",
+   "character": "Paladin",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "HeroicStrike"
+  },
+  {
+   "id": "WeaponPaladin-03",
+   "character": "Paladin",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "RadiantLight"
+  },
+  {
+   "id": "WeaponPaladin-04",
+   "character": "Paladin",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FissureStrike"
+  },
+  {
+   "id": "WeaponPaladin-05",
+   "character": "Paladin",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "HammerOfWrath"
+  },
+  {
+   "id": "WeaponBloodmage-01",
+   "character": "Bloodmage",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "ChaoticMissile"
+  },
+  {
+   "id": "WeaponBloodmage-02",
+   "character": "Bloodmage",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "InfectedShot"
+  },
+  {
+   "id": "WeaponBloodmage-03",
+   "character": "Bloodmage",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "OrbsOfDestruction"
+  },
+  {
+   "id": "WeaponBloodmage-04",
+   "character": "Bloodmage",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "RippleOfLight"
+  },
+  {
+   "id": "WeaponBloodmage-05",
+   "character": "Bloodmage",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "DeathAndDecay"
+  },
+  {
+   "id": "WeaponBeastmaster-01",
+   "character": "Beastmaster",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "VenomousStrike"
+  },
+  {
+   "id": "WeaponBeastmaster-02",
+   "character": "Beastmaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "WildStrike"
+  },
+  {
+   "id": "WeaponBeastmaster-03",
+   "character": "Beastmaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "BrutalSlam"
+  },
+  {
+   "id": "WeaponBeastmaster-04",
+   "character": "Beastmaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SpiderCocoon"
+  },
+  {
+   "id": "WeaponBeastmaster-05",
+   "character": "Beastmaster",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SummonPyrodactil"
+  },
+  {
+   "id": "WeaponRogue-01",
+   "character": "Rogue",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "SinisterStrike"
+  },
+  {
+   "id": "WeaponRogue-02",
+   "character": "Rogue",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "TwinDaggers"
+  },
+  {
+   "id": "WeaponRogue-03",
+   "character": "Rogue",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "DebilitatingBomb"
+  },
+  {
+   "id": "WeaponRogue-04",
+   "character": "Rogue",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ShadowStab"
+  },
+  {
+   "id": "WeaponRogue-05",
+   "character": "Rogue",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "VipersPounce"
+  },
+  {
+   "id": "WeaponElementalist-01",
+   "character": "Elementalist",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "LightningBeam"
+  },
+  {
+   "id": "WeaponElementalist-02",
+   "character": "Elementalist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SevereCold"
+  },
+  {
+   "id": "WeaponElementalist-03",
+   "character": "Elementalist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "RayOfFire"
+  },
+  {
+   "id": "WeaponElementalist-04",
+   "character": "Elementalist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ContaminatedCut"
+  },
+  {
+   "id": "WeaponElementalist-05",
+   "character": "Elementalist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "GeomagneticPulse"
+  },
+  {
+   "id": "WeaponLegionnaire-01",
+   "character": "Legionnaire",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "Thrust"
+  },
+  {
+   "id": "WeaponLegionnaire-02",
+   "character": "Legionnaire",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "JupitersSpear"
+  },
+  {
+   "id": "WeaponLegionnaire-03",
+   "character": "Legionnaire",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "CorrosiveSpear"
+  },
+  {
+   "id": "WeaponLegionnaire-04",
+   "character": "Legionnaire",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "PiercingFlames"
+  },
+  {
+   "id": "WeaponLegionnaire-05",
+   "character": "Legionnaire",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ChaoticOnslaught"
+  },
+  {
+   "id": "WeaponNecromancer-01",
+   "character": "Necromancer",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "SummonSkeletalWarrior"
+  },
+  {
+   "id": "WeaponNecromancer-02",
+   "character": "Necromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SpectralGuardian"
+  },
+  {
+   "id": "WeaponNecromancer-03",
+   "character": "Necromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SummonPlagueRats"
+  },
+  {
+   "id": "WeaponNecromancer-04",
+   "character": "Necromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "MurderOfCrows"
+  },
+  {
+   "id": "WeaponNecromancer-05",
+   "character": "Necromancer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SummonIceFiend"
+  },
+  {
+   "id": "WeaponDeathKnight-01",
+   "character": "DeathKnight",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "Obliterate"
+  },
+  {
+   "id": "WeaponDeathKnight-02",
+   "character": "DeathKnight",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FesteringStrike"
+  },
+  {
+   "id": "WeaponDeathKnight-03",
+   "character": "DeathKnight",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "RavagingStrike"
+  },
+  {
+   "id": "WeaponDeathKnight-04",
+   "character": "DeathKnight",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FrostStrike"
+  },
+  {
+   "id": "WeaponDeathKnight-05",
+   "character": "DeathKnight",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ScourgeStrike"
+  },
+  {
+   "id": "WeaponMonkeyKing-01",
+   "character": "MonkeyKing",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "MassiveSlam"
+  },
+  {
+   "id": "WeaponMonkeyKing-02",
+   "character": "MonkeyKing",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "TempestuousSlash"
+  },
+  {
+   "id": "WeaponMonkeyKing-03",
+   "character": "MonkeyKing",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "GunpowderStrike"
+  },
+  {
+   "id": "WeaponMonkeyKing-04",
+   "character": "MonkeyKing",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FracturingBlow"
+  },
+  {
+   "id": "WeaponMonkeyKing-05",
+   "character": "MonkeyKing",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SummonRadiantClones"
+  },
+  {
+   "id": "WeaponEngineer-01",
+   "character": "Engineer",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "BurstOfLead"
+  },
+  {
+   "id": "WeaponEngineer-02",
+   "character": "Engineer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "EZSentry"
+  },
+  {
+   "id": "WeaponEngineer-03",
+   "character": "Engineer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Energizer"
+  },
+  {
+   "id": "WeaponEngineer-04",
+   "character": "Engineer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "QTBombuddy1000"
+  },
+  {
+   "id": "WeaponEngineer-05",
+   "character": "Engineer",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "EarthShot"
+  },
+  {
+   "id": "WeaponMyrmidon-01",
+   "character": "Myrmidon",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "GlacialTrident"
+  },
+  {
+   "id": "WeaponMyrmidon-02",
+   "character": "Myrmidon",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "TidalThrust"
+  },
+  {
+   "id": "WeaponMyrmidon-03",
+   "character": "Myrmidon",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SanctifiedThrow"
+  },
+  {
+   "id": "WeaponMyrmidon-04",
+   "character": "Myrmidon",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "AbyssalFissure"
+  },
+  {
+   "id": "WeaponMyrmidon-05",
+   "character": "Myrmidon",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "SingularityPiercer"
+  },
+  {
+   "id": "WeaponDemonHunter-01",
+   "character": "DemonHunter",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "UncontrolledArrows"
+  },
+  {
+   "id": "WeaponDemonHunter-02",
+   "character": "DemonHunter",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Quickblast"
+  },
+  {
+   "id": "WeaponDemonHunter-03",
+   "character": "DemonHunter",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "HellspawnGrenade"
+  },
+  {
+   "id": "WeaponDemonHunter-04",
+   "character": "DemonHunter",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ShadowSpiral"
+  },
+  {
+   "id": "WeaponDemonHunter-05",
+   "character": "DemonHunter",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "OblivionArrow"
+  },
+  {
+   "id": "WeaponPirate-01",
+   "character": "Pirate",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "PlunderShot"
+  },
+  {
+   "id": "WeaponPirate-02",
+   "character": "Pirate",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Sharktooth"
+  },
+  {
+   "id": "WeaponPirate-03",
+   "character": "Pirate",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "CannonBarrage"
+  },
+  {
+   "id": "WeaponPirate-04",
+   "character": "Pirate",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "CursedShot"
+  },
+  {
+   "id": "WeaponPirate-05",
+   "character": "Pirate",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Splash"
+  },
+  {
+   "id": "WeaponShaman-01",
+   "character": "Shaman",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "VineWhip"
+  },
+  {
+   "id": "WeaponShaman-02",
+   "character": "Shaman",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ArcaneReaping"
+  },
+  {
+   "id": "WeaponShaman-03",
+   "character": "Shaman",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FlamingSpiral"
+  },
+  {
+   "id": "WeaponShaman-04",
+   "character": "Shaman",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Earthbreaker"
+  },
+  {
+   "id": "WeaponShaman-05",
+   "character": "Shaman",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "CleansingStrike"
+  },
+  {
+   "id": "WeaponMachinist-01",
+   "character": "Machinist",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "ResonatingCrystals"
+  },
+  {
+   "id": "WeaponMachinist-02",
+   "character": "Machinist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "UnstableReactor"
+  },
+  {
+   "id": "WeaponMachinist-03",
+   "character": "Machinist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "BlazingRay"
+  },
+  {
+   "id": "WeaponMachinist-04",
+   "character": "Machinist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "LightningShield"
+  },
+  {
+   "id": "WeaponMachinist-05",
+   "character": "Machinist",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "FrostAura"
+  },
+  {
+   "id": "WeaponSamurai-01",
+   "character": "Samurai",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "SliceAndDice"
+  },
+  {
+   "id": "WeaponSamurai-02",
+   "character": "Samurai",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "ShadowSlice"
+  },
+  {
+   "id": "WeaponSamurai-03",
+   "character": "Samurai",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "EchoingRupture"
+  },
+  {
+   "id": "WeaponSamurai-04",
+   "character": "Samurai",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "MoltenFang"
+  },
+  {
+   "id": "WeaponSamurai-05",
+   "character": "Samurai",
+   "auto": false,
+   "hidden": false,
+   "mainSkill": "Coercion"
+  },
+  {
+   "id": "WeaponBlacksmith-01",
+   "character": "Blacksmith",
+   "auto": true,
+   "hidden": false,
+   "mainSkill": "AnvilSlam"
+  }
+ ],
+ "maps": [
+  {
+   "id": "SurvivorsDesert",
+   "numericId": 1,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": false,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsCavern",
+   "numericId": 2,
+   "biome": "Cavern",
+   "unavailable": false,
+   "ignore": false,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsForest",
+   "numericId": 3,
+   "biome": "Forest",
+   "unavailable": false,
+   "ignore": false,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsSnow",
+   "numericId": 4,
+   "biome": "Snow",
+   "unavailable": false,
+   "ignore": false,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsDungeon",
+   "numericId": 5,
+   "biome": "Dungeon",
+   "unavailable": false,
+   "ignore": false,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsOverlordArena",
+   "numericId": 6,
+   "biome": "Overlord",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsCathedral",
+   "numericId": 7,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": false
+  },
+  {
+   "id": "SurvivorsDesertColiseum",
+   "numericId": 9,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsDesertScorpionPit",
+   "numericId": 10,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsDesertTomb",
+   "numericId": 11,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsCavernSpidersLair",
+   "numericId": 12,
+   "biome": "Cavern",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsCrusadesLobby",
+   "numericId": 13,
+   "biome": "Desert",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsCavernKoboldMines",
+   "numericId": 14,
+   "biome": "Cavern",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsLootGoblinCavern",
+   "numericId": 15,
+   "biome": "Cavern",
+   "unavailable": true,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsFinalBoss",
+   "numericId": 16,
+   "biome": "Cavern",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsForestSporewilds",
+   "numericId": 17,
+   "biome": "Forest",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsForestGoblinCamp",
+   "numericId": 18,
+   "biome": "Forest",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsSnowPeakOfLaments",
+   "numericId": 19,
+   "biome": "Snow",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsDungeonCryptOfTheDamned",
+   "numericId": 20,
+   "biome": "Dungeon",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  },
+  {
+   "id": "SurvivorsSnowFrostborn",
+   "numericId": 21,
+   "biome": "Snow",
+   "unavailable": false,
+   "ignore": true,
+   "crusade": true
+  }
+ ],
+ "affixTiers": [
+  {
+   "tier": 1,
+   "requiredCurse": 0
+  },
+  {
+   "tier": 2,
+   "requiredCurse": 5
+  },
+  {
+   "tier": 3,
+   "requiredCurse": 11
+  },
+  {
+   "tier": 4,
+   "requiredCurse": 21
+  },
+  {
+   "tier": 5,
+   "requiredCurse": 33
+  },
+  {
+   "tier": 6,
+   "requiredCurse": 44
+  },
+  {
+   "tier": 7,
+   "requiredCurse": 53
+  }
+ ],
+ "runes": [
+  {
+   "id": "RuneExtraDamageHealthLessThan",
+   "node": "Barbarian_T02S01",
+   "character": "Barbarian"
+  },
+  {
+   "id": "RuneExtraCastFrequencyHealthMissing",
+   "node": "Barbarian_T03S01",
+   "character": "Barbarian"
+  },
+  {
+   "id": "RuneChanceToKill",
+   "node": "Barbarian_T04S01",
+   "character": "Barbarian"
+  },
+  {
+   "id": "RuneExtraCritChanceAgainstLowHealth",
+   "node": "Pyromancer_T02S01",
+   "character": "Pyromancer"
+  },
+  {
+   "id": "RuneExtraDamageAgainstBurn",
+   "node": "Pyromancer_T03S01",
+   "character": "Pyromancer"
+  },
+  {
+   "id": "RuneSkillTypeDamageFire",
+   "node": "Pyromancer_T04S01",
+   "character": "Pyromancer"
+  },
+  {
+   "id": "RuneExtraCastFrequencyBleed",
+   "node": "Houndmaster_T02S01",
+   "character": "HoundMaster"
+  },
+  {
+   "id": "RuneExtraCritChance",
+   "node": "Houndmaster_T03S01",
+   "character": "HoundMaster"
+  },
+  {
+   "id": "RuneExtraDamagePerMinorSoulstone",
+   "node": "Houndmaster_T04S01",
+   "character": "HoundMaster"
+  },
+  {
+   "id": "RuneEarlyGameStatsBonus",
+   "node": "Spellbreaker_T02S01",
+   "character": "Spellbreaker"
+  },
+  {
+   "id": "RuneBanishEpicLegendary",
+   "node": "Spellbreaker_T03S01",
+   "character": "Spellbreaker"
+  },
+  {
+   "id": "RuneWeaponArsenal",
+   "node": "Spellbreaker_T04S01",
+   "character": "Spellbreaker"
+  },
+  {
+   "id": "RuneMaterialCollector",
+   "node": "ArcaneWeaver_T02S01",
+   "character": "ArcaneWeaver"
+  },
+  {
+   "id": "RuneExtraDamagePerLevel",
+   "node": "ArcaneWeaver_T03S01",
+   "character": "ArcaneWeaver"
+  },
+  {
+   "id": "RuneGuaranteedLegendary",
+   "node": "ArcaneWeaver_T04S01",
+   "character": "ArcaneWeaver"
+  },
+  {
+   "id": "RuneChangeStartingSkill",
+   "node": "Sentinel_T02S01",
+   "character": "Sentinel"
+  },
+  {
+   "id": "RuneExtraRange",
+   "node": "Sentinel_T03S01",
+   "character": "Sentinel"
+  },
+  {
+   "id": "RuneExtraDamageStandingStill",
+   "node": "Sentinel_T04S01",
+   "character": "Sentinel"
+  },
+  {
+   "id": "RuneExtraCritDamageAgainstDazed",
+   "node": "Paladin_T02S01",
+   "character": "Paladin"
+  },
+  {
+   "id": "RuneRegenWhileHealthBelow",
+   "node": "Paladin_T03S01",
+   "character": "Paladin"
+  },
+  {
+   "id": "RuneRegenPerKills",
+   "node": "Paladin_T04S01",
+   "character": "Paladin"
+  },
+  {
+   "id": "RuneIncreaseDamageButSkillAreRandom",
+   "node": "Bloodmage_T02S01",
+   "character": "Bloodmage"
+  },
+  {
+   "id": "RuneChanceToApplyRandomNegativeEffect",
+   "node": "Bloodmage_T03S01",
+   "character": "Bloodmage"
+  },
+  {
+   "id": "RuneRandomDamageToAllSkills",
+   "node": "Bloodmage_T04S01",
+   "character": "Bloodmage"
+  },
+  {
+   "id": "RuneIncreaseDamagePerSummonedUnit",
+   "node": "Beastmaster_T02S01",
+   "character": "Beastmaster"
+  },
+  {
+   "id": "RuneExtraDamagePerDifferentTypeOfPowerUpCollected",
+   "node": "Beastmaster_T03S01",
+   "character": "Beastmaster"
+  },
+  {
+   "id": "RuneExtraSummons",
+   "node": "Beastmaster_T04S01",
+   "character": "Beastmaster"
+  },
+  {
+   "id": "RuneExtraDamageReducedHealth",
+   "node": "Rogue_T02S01",
+   "character": "Rogue"
+  },
+  {
+   "id": "RuneExtraMovementSpeedReducedPushbackResistance",
+   "node": "Rogue_T03S01",
+   "character": "Rogue"
+  },
+  {
+   "id": "RuneSetHealthToOne",
+   "node": "Rogue_T04S01",
+   "character": "Rogue"
+  },
+  {
+   "id": "RuneExtraDamagePerDuplicatedTag",
+   "node": "Elementalist_T02S01",
+   "character": "Elementalist"
+  },
+  {
+   "id": "RuneNegativeEffectsDealDamageFaster",
+   "node": "Elementalist_T03S01",
+   "character": "Elementalist"
+  },
+  {
+   "id": "RuneRefillLockRerollPerEndlessCycle",
+   "node": "Elementalist_T04S01",
+   "character": "Elementalist"
+  },
+  {
+   "id": "RuneExtraBlockReducedDash",
+   "node": "Legionnaire_T02S01",
+   "character": "Legionnaire"
+  },
+  {
+   "id": "RuneSoulstonesToMinerals",
+   "node": "Legionnaire_T03S01",
+   "character": "Legionnaire"
+  },
+  {
+   "id": "RuneChanceToCastPositionBasedSkillAfterKill",
+   "node": "Legionnaire_T04S01",
+   "character": "Legionnaire"
+  },
+  {
+   "id": "RuneExtraDamageWhileBossIsAlive",
+   "node": "Necromancer_T02S01",
+   "character": "Necromancer"
+  },
+  {
+   "id": "RuneChanceToCastPositionBasedSkillAfterKillExplosion",
+   "node": "Necromancer_T03S01",
+   "character": "Necromancer"
+  },
+  {
+   "id": "RuneExtraSkillSlotReducedDamage",
+   "node": "Necromancer_T04S01",
+   "character": "Necromancer"
+  },
+  {
+   "id": "RuneGuaranteeActiveSkillForXLevels",
+   "node": "DeathKnight_T02S01",
+   "character": "DeathKnight"
+  },
+  {
+   "id": "RuneExtraVariableDamage",
+   "node": "DeathKnight_T03S01",
+   "character": "DeathKnight"
+  },
+  {
+   "id": "RuneGuaranteedMinimumRarity",
+   "node": "DeathKnight_T04S01",
+   "character": "DeathKnight"
+  },
+  {
+   "id": "RuneFewerSkillSlotIncreasedDamage",
+   "node": "MonkeyKing_T02S01",
+   "character": "MonkeyKing"
+  },
+  {
+   "id": "RuneGainProwessOnCastSkill",
+   "node": "MonkeyKing_T03S01",
+   "character": "MonkeyKing"
+  },
+  {
+   "id": "RuneExtraInventoryDataDeathGuard",
+   "node": "MonkeyKing_T04S01",
+   "character": "MonkeyKing"
+  },
+  {
+   "id": "RuneGainAmmunitionOnCastSkill",
+   "node": "Engineer_T02S01",
+   "character": "Engineer"
+  },
+  {
+   "id": "RuneExtraCastFrequencyStandingStill",
+   "node": "Engineer_T03S01",
+   "character": "Engineer"
+  },
+  {
+   "id": "RuneExtraStatsOnAmmunitionProc",
+   "node": "Engineer_T04S01",
+   "character": "Engineer"
+  },
+  {
+   "id": "RuneExtraStatsOnIcyVeinsProc",
+   "node": "Myrmidon_T02S01",
+   "character": "Myrmidon"
+  },
+  {
+   "id": "RuneChanceToNotConsumeBuffIcyVeins",
+   "node": "Myrmidon_T03S01",
+   "character": "Myrmidon"
+  },
+  {
+   "id": "RuneGainIcyVeinsOnFormApply",
+   "node": "Myrmidon_T04S01",
+   "character": "Myrmidon"
+  },
+  {
+   "id": "RuneExtraCritPotencyReducedDamage",
+   "node": "DemonHunter_T02S01",
+   "character": "DemonHunter"
+  },
+  {
+   "id": "RuneExtraRunicPowerReducedArmor",
+   "node": "DemonHunter_T03S01",
+   "character": "DemonHunter"
+  },
+  {
+   "id": "RuneAptitudeOnChaoticProc",
+   "node": "DemonHunter_T04S01",
+   "character": "DemonHunter"
+  },
+  {
+   "id": "RuneDrunkenEffect",
+   "node": "Pirate_T02S01",
+   "character": "Pirate"
+  },
+  {
+   "id": "RuneGainCursedPerCastAndStatsPerTentacle",
+   "node": "Pirate_T03S01",
+   "character": "Pirate"
+  },
+  {
+   "id": "RuneAddDevastatingForAllSkills",
+   "node": "Pirate_T04S01",
+   "character": "Pirate"
+  },
+  {
+   "id": "RuneBanishGuaranteesEpic",
+   "node": "Shaman_T02S01",
+   "character": "Shaman"
+  },
+  {
+   "id": "RuneIncreaseCriticalPotencyBasedOnMaxHealth",
+   "node": "Shaman_T03S01",
+   "character": "Shaman"
+  },
+  {
+   "id": "RuneReduceMaxSummonIncreaseDamage",
+   "node": "Shaman_T04S01",
+   "character": "Shaman"
+  },
+  {
+   "id": "RuneChanceToApplyBrittleEffect",
+   "node": "Machinist_T02S01",
+   "character": "Machinist"
+  },
+  {
+   "id": "RuneReduceBuffChargeAmountRequired",
+   "node": "Machinist_T03S01",
+   "character": "Machinist"
+  },
+  {
+   "id": "RuneIncreaseMultiplicativeDamageBuffStatusProcs",
+   "node": "Machinist_T04S01",
+   "character": "Machinist"
+  },
+  {
+   "id": "RuneIncreaseAmountPrestigeGained",
+   "node": "Samurai_T02S01",
+   "character": "Samurai"
+  },
+  {
+   "id": "RuneRecoverHealthOnDash",
+   "node": "Samurai_T03S01",
+   "character": "Samurai"
+  },
+  {
+   "id": "RuneConvertMovementIntoCriticalPotency",
+   "node": "Samurai_T04S01",
+   "character": "Samurai"
+  }
+ ],
+ "achievements": [
+  {
+   "id": "DestroyObjectsWithCurseIntensityValentineAltar0",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "DestroyObjectsWithCurseIntensityValentineAltar18",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "DestroyObjectsWithCurseIntensityValentineAltar34",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteBossRushCycle1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteBossRushCycle2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteBossRushCycle3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "RunicPower"
+  },
+  {
+   "id": "CompleteSkillTreeArcaneWeaver",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeBarbarian",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeBeastmaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeBloodmage",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeDeathKnight",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeDemonHunter",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeElementalist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeEngineer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeHoundMaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeLegionnaire",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeMachinist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeMonkeyKing",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeMyrmidon",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeNecromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreePaladin",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreePirate",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreePyromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeRogue",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeSamurai",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeSentinel",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeShaman",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteSkillTreeSpellbreaker",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "CompleteCrusadeTier1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteCrusadeTier2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteCrusadeTier3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteCrusadeTier4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  },
+  {
+   "id": "CompleteCrusadeTier5",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "None"
+  },
+  {
+   "id": "CompleteEndlessCycle1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteEndlessCycle2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteEndlessCycle3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMapCount5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "Achievement-CompleteMasteryTierCopper",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "Achievement-CompleteMasteryTierGold",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "Achievement-CompleteMasteryTierSilver",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime15",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime25",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime8",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "RunicPower"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime9",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12ArcaneWeaver",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Barbarian",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Beastmaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Bloodmage",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12DeathKnight",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Elementalist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12HoundMaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Legionnaire",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12MonkeyKing",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Necromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Paladin",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Pyromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Rogue",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Sentinel",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteMatchInLessThanTime12Spellbreaker",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteSkillTreeCount14",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  },
+  {
+   "id": "CompleteSkillTreeCount22",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteSkillTreeCount8",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsArcaneWeaver",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsBarbarian",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsBeastmaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsBloodmage",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsDeathKnight",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsDemonHunter",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsElementalist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsEngineer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsHoundMaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsLegionnaire",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsMachinist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsMonkeyKing",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsMyrmidon",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsNecromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsPaladin",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsPirate",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsPyromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsRogue",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsSamurai",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsSentinel",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsShaman",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftAllCharacterWeaponsSpellbreaker",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "CraftWeaponArcaneWeaver2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponArcaneWeaver3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponArcaneWeaver4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponArcaneWeaver5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBarbarian2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBarbarian3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBarbarian4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBarbarian5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBeastmaster2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBeastmaster3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBeastmaster4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBeastmaster5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBloodmage2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBloodmage3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBloodmage4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponBloodmage5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDeathKnight2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDeathKnight3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDeathKnight4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDeathKnight5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDemonHunter2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDemonHunter3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDemonHunter4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponDemonHunter5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponElementalist2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponElementalist3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponElementalist4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponElementalist5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponEngineer2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponEngineer3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponEngineer4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponEngineer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponHoundMaster2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponHoundMaster3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponHoundMaster4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponHoundMaster5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponLegionnaire2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponLegionnaire3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponLegionnaire4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponLegionnaire5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMachinist2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMachinist3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMachinist4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMachinist5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMonkeyKing2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMonkeyKing3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMonkeyKing4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMonkeyKing5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMyrmidon2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMyrmidon3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMyrmidon4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponMyrmidon5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponNecromancer2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponNecromancer3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponNecromancer4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponNecromancer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPaladin2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPaladin3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPaladin4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPaladin5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPirate2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPirate3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPirate4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPirate5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPyromancer2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPyromancer3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPyromancer4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponPyromancer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponRogue2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponRogue3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponRogue4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponRogue5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSamurai2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSamurai3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSamurai4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSamurai5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSentinel2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSentinel3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSentinel4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSentinel5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponShaman2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponShaman3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponShaman4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponShaman5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSpellbreaker2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSpellbreaker3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSpellbreaker4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CraftWeaponSpellbreaker5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateBossPerMatchSurvivorsCavern3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Map"
+  },
+  {
+   "id": "EliminateBossPerMatchSurvivorsDesert1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "EliminateBossPerMatchSurvivorsDesert2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Map"
+  },
+  {
+   "id": "EliminateBossPerMatchSurvivorsForest4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Map"
+  },
+  {
+   "id": "EliminateBossPerMatchSurvivorsSnow5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Map"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensityCaveElemental0",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensityCaveElemental25",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensityCaveElemental34",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensitySasquach0",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensitySasquach25",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "EliminateSpecialEnemyWithCurseIntensitySasquach34",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsCavern1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsCavern2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsCavern3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsCavern4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsCavern6",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDesert1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDesert2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDesert3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDesert6",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "RunicPower"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDungeon2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDungeon3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsDungeon4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsForest2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsForest3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsForest4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsForest6",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow1",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow2",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow3",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow4",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "CompleteAffixTierSurvivorsSnow6",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachExperienceLevel25",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel75",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachExperienceLevel200",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachExperienceLevel250",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "CompleteSurvivorsCavern",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "MapAffixes"
+  },
+  {
+   "id": "CompleteSurvivorsDesert",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "MapAffixes"
+  },
+  {
+   "id": "CompleteSurvivorsDungeon",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "MapAffixes"
+  },
+  {
+   "id": "CompleteSurvivorsForest",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "MapAffixes"
+  },
+  {
+   "id": "CompleteSurvivorsSnow",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "MapAffixes"
+  },
+  {
+   "id": "PrestigeArcaneWeaver10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeArcaneWeaver100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeArcaneWeaver150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeArcaneWeaver20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeArcaneWeaver30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeArcaneWeaver40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeArcaneWeaver5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeArcaneWeaver50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeArcaneWeaver60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeArcaneWeaver70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBarbarian10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBarbarian100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBarbarian150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeBarbarian20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBarbarian30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBarbarian40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBarbarian5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBarbarian50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBarbarian60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBarbarian70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBeastmaster10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBeastmaster100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBeastmaster150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeBeastmaster20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBeastmaster30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBeastmaster40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBeastmaster5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBeastmaster50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBeastmaster60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBeastmaster70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBlacksmith150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeBloodmage10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBloodmage100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBloodmage150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeBloodmage20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBloodmage30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBloodmage40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeBloodmage5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBloodmage50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeBloodmage60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeBloodmage70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDeathKnight10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDeathKnight100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDeathKnight150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeDeathKnight20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDeathKnight30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeDeathKnight40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDeathKnight5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDeathKnight50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDeathKnight60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeDeathKnight70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDemonHunter10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDemonHunter100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDemonHunter150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeDemonHunter20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDemonHunter40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeDemonHunter5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDemonHunter50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeDemonHunter70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeElementalist10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeElementalist100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeElementalist150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeElementalist20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeElementalist30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeElementalist40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeElementalist5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeElementalist50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeElementalist60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeElementalist70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeEngineer10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeEngineer100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeEngineer150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeEngineer20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeEngineer40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeEngineer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeEngineer50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeEngineer70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeHoundMaster10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeHoundMaster100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeHoundMaster150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeHoundMaster20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeHoundMaster30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeHoundMaster40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeHoundMaster5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeHoundMaster50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeHoundMaster60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeHoundMaster70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeLegionnaire10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeLegionnaire100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeLegionnaire150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeLegionnaire20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeLegionnaire30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeLegionnaire40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeLegionnaire5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeLegionnaire50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeLegionnaire60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeLegionnaire70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMachinist10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMachinist100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMachinist150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeMachinist20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMachinist40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMachinist5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMachinist50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMachinist70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMonkeyKing10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMonkeyKing100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMonkeyKing150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeMonkeyKing20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMonkeyKing30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeMonkeyKing40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMonkeyKing5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMonkeyKing50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMonkeyKing60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeMonkeyKing70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMyrmidon10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMyrmidon100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMyrmidon150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeMyrmidon20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMyrmidon40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMyrmidon5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMyrmidon50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeMyrmidon70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeNecromancer10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeNecromancer100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeNecromancer150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeNecromancer20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeNecromancer30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeNecromancer40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeNecromancer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeNecromancer50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeNecromancer60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeNecromancer70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePaladin10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePaladin100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePaladin150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigePaladin20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePaladin30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigePaladin40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePaladin5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePaladin50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePaladin60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigePaladin70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePirate10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePirate100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePirate150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigePirate20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePirate40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePirate5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePirate50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePirate70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePyromancer10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePyromancer100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePyromancer150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigePyromancer20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePyromancer30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigePyromancer40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigePyromancer5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePyromancer50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigePyromancer60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigePyromancer70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeRogue10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeRogue100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeRogue150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeRogue20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeRogue30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeRogue40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeRogue5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeRogue50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeRogue55",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeRogue60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeRogue70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSamurai10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSamurai100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSamurai150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeSamurai20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSamurai40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSamurai5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSamurai50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSamurai70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSentinel10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSentinel100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSentinel150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeSentinel20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSentinel30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeSentinel40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSentinel5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSentinel50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSentinel60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeSentinel70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeShaman10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeShaman100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeShaman150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeShaman20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeShaman40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeShaman5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeShaman50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeShaman70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSpellbreaker10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSpellbreaker100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSpellbreaker150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "CharacterSkin"
+  },
+  {
+   "id": "PrestigeSpellbreaker20",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSpellbreaker30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeSpellbreaker40",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeSpellbreaker5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSpellbreaker50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "PrestigeSpellbreaker60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "PrestigeSpellbreaker70",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Weapon"
+  },
+  {
+   "id": "PrestigeMultipleCharacters50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalBossesKilled100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalBossesKilled150",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalBossesKilled200",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalBossesKilled300",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalBossesKilled400",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalBossesKilled50",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalBossesKilled500",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalBossesKilled600",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "RunicPower"
+  },
+  {
+   "id": "ReachTotalBossesKilled700",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalElitesKilled100",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalElitesKilled1000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalElitesKilled1500",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalElitesKilled2000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalElitesKilled250",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalElitesKilled3000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalElitesKilled500",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled10000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Character"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled100000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled200000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled300000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled50000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled500000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "RunicPower"
+  },
+  {
+   "id": "ReachTotalEnemiesKilled75000",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockArcaneWeaver",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockBeastmaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockBlacksmith",
+   "disabled": false,
+   "hidden": true,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockBloodmage",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockDeathKnight",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockDemonHunter",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockElementalist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockEngineer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockHoundMaster",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockLegionnaire",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockMachinist",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockMonkeyKing",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockMyrmidon",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockNecromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockPaladin",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockPirate",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockPyromancer",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockRogue",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockSamurai",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockSentinel",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockShaman",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockSpellbreaker",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockCharacterCount14",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockCharacterCount22",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "ActiveSkill"
+  },
+  {
+   "id": "UnlockCharacterCount8",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "UnlockRunicPower5",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Rune"
+  },
+  {
+   "id": "UnlockGlobalSkillTree",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "Feature"
+  },
+  {
+   "id": "WeaponsUpgradedToArtifactRarityCount10",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  },
+  {
+   "id": "WeaponsUpgradedToArtifactRarityCount30",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  },
+  {
+   "id": "WeaponsUpgradedToArtifactRarityCount60",
+   "disabled": false,
+   "hidden": false,
+   "rewardType": "None"
+  }
+ ]
+}

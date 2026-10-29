@@ -1,0 +1,17 @@
+* text=auto
+
+# The toolchain is bash + Python; CRLF breaks the shell scripts under Git Bash.
+*.sh text eol=lf
+*.py text eol=lf
+*.cs text eol=lf
+*.csproj text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+
+*.png binary
+*.dll binary
+*.apworld binary
+*.zip binary
