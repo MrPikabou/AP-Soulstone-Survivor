@@ -206,12 +206,26 @@ namespace SoulstoneAP
 
         private Field _activeField;
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern short GetKeyState(int virtualKey);
+
+        private const int CapsLockVirtualKey = 0x14;
+
+        /// <summary>
+        /// OS Caps Lock state. The Input System only reports Caps Lock being pressed,
+        /// never whether the lock is on, so typing in capitals relied on Shift alone.
+        /// </summary>
+        private static bool CapsLockOn()
+        {
+            try { return (GetKeyState(CapsLockVirtualKey) & 1) != 0; }
+            catch { return false; }
+        }
+
         private void HandleTyping()
         {
             var keyboard = Keyboard.current;
             if (keyboard == null || _activeField == null) return;
 
-            var shift = keyboard.shiftKey.isPressed;
             var changed = false;
 
             if (keyboard.backspaceKey.wasPressedThisFrame && _activeField.Value.Length > 0)
@@ -220,18 +234,30 @@ namespace SoulstoneAP
                 changed = true;
             }
 
-            foreach (var key in PrintableKeys)
+            var command = keyboard.ctrlKey.isPressed
+                || (keyboard.leftCommandKey != null && keyboard.leftCommandKey.isPressed)
+                || (keyboard.rightCommandKey != null && keyboard.rightCommandKey.isPressed);
+
+            if (command && keyboard.vKey.wasPressedThisFrame) PasteIntoActiveField();
+            else if (command && keyboard.cKey.wasPressedThisFrame) CopyActiveField();
+
+            if (!command)
             {
-                if (_activeField.Value.Length >= MaxFieldLength) break;
+                var shift = keyboard.shiftKey.isPressed;
+                var caps = CapsLockOn();
+                foreach (var key in PrintableKeys)
+                {
+                    if (_activeField.Value.Length >= MaxFieldLength) break;
 
-                var control = keyboard[key];
-                if (control == null || !control.wasPressedThisFrame) continue;
+                    var control = keyboard[key];
+                    if (control == null || !control.wasPressedThisFrame) continue;
 
-                var character = KeyToChar(key, shift);
-                if (!character.HasValue) continue;
+                    var character = KeyToChar(key, shift, caps);
+                    if (!character.HasValue) continue;
 
-                _activeField.Value += character.Value;
-                changed = true;
+                    _activeField.Value += character.Value;
+                    changed = true;
+                }
             }
 
             if (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame ||
@@ -243,12 +269,66 @@ namespace SoulstoneAP
             if (changed && _activeField != null) RefreshFieldText(_activeField);
         }
 
-        private static char? KeyToChar(Key key, bool shift)
+        private void CopyActiveField()
+        {
+            try
+            {
+                GUIUtility.systemCopyBuffer = _activeField.Value ?? "";
+                _error = "";
+            }
+            catch (Exception error)
+            {
+                _error = "Clipboard unavailable on this build (" + error.GetType().Name + ").";
+            }
+        }
+
+        private void PasteIntoActiveField()
+        {
+            var field = _activeField;
+            if (field == null) return;
+
+            string clipboard;
+            try
+            {
+                clipboard = GUIUtility.systemCopyBuffer;
+            }
+            catch (Exception error)
+            {
+                _error = "Clipboard unavailable on this build (" + error.GetType().Name + ").";
+                return;
+            }
+
+            if (string.IsNullOrEmpty(clipboard)) return;
+
+            // Multi-line clips lose their breaks: these fields are single line.
+            var buffer = new char[clipboard.Length];
+            var length = 0;
+            foreach (var character in clipboard)
+            {
+                if (character < ' ' || character == '\u007f') continue;
+                buffer[length++] = character;
+            }
+            if (length == 0) return;
+
+            var room = MaxFieldLength - field.Value.Length;
+            if (room <= 0) return;
+            if (length > room) length = room;
+
+            field.Value += new string(buffer, 0, length);
+            _error = "";
+            RefreshFieldText(field);
+        }
+
+        /// <summary>
+        /// One key to one character. Caps Lock only affects letters; symbols stay on
+        /// Shift, exactly as a normal text box behaves.
+        /// </summary>
+        private static char? KeyToChar(Key key, bool shift, bool caps)
         {
             if (key >= Key.A && key <= Key.Z)
             {
                 var letter = (char)('a' + (key - Key.A));
-                return shift ? char.ToUpperInvariant(letter) : letter;
+                return (shift ^ caps) ? char.ToUpperInvariant(letter) : letter;
             }
 
             if (key >= Key.Digit1 && key <= Key.Digit9)

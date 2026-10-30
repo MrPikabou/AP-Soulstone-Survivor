@@ -48,34 +48,60 @@ namespace SoulstoneAP
             if (json != null) _outgoing.Enqueue(json);
         }
 
+        /// <summary>
+        /// Scheme order for an address. archipelago.gg rooms only answer TLS - a plain
+        /// ws:// request there gets no valid HTTP response at all - while a server on
+        /// the same machine is plain. Try the likely one first, then the other.
+        /// </summary>
+        private static string[] SchemesFor(string host)
+        {
+            var local = host == "localhost" || host == "127.0.0.1" || host == "::1" || host == "[::1]"
+                        || host.StartsWith("192.168.", StringComparison.Ordinal)
+                        || host.StartsWith("10.", StringComparison.Ordinal)
+                        || host.StartsWith("172.", StringComparison.Ordinal);
+            return local ? new[] { "ws", "wss" } : new[] { "wss", "ws" };
+        }
+
         private async Task RunAsync(string host, int port, string slot, string password, CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
-                using (var socket = new ClientWebSocket())
+                foreach (var scheme in SchemesFor(host))
                 {
-                    try
+                    var reached = false;
+                    using (var socket = new ClientWebSocket())
                     {
-                        socket.Options.KeepAliveInterval = TimeSpan.FromSeconds(20);
-                        await socket.ConnectAsync(new Uri($"ws://{host}:{port}"), token).ConfigureAwait(false);
-                        Status = "Connected, joining slot...";
+                        try
+                        {
+                            socket.Options.KeepAliveInterval = TimeSpan.FromSeconds(20);
+                            Status = $"Connecting to {scheme}://{host}:{port}...";
+                            await socket.ConnectAsync(new Uri($"{scheme}://{host}:{port}"), token).ConfigureAwait(false);
+                            reached = true;
+                            Status = "Connected, joining slot...";
 
-                        var sender = Task.Run(() => SendLoopAsync(socket, token), token);
-                        await ReceiveLoopAsync(socket, token).ConfigureAwait(false);
-                        await sender.ConfigureAwait(false);
+                            var sender = Task.Run(() => SendLoopAsync(socket, token), token);
+                            await ReceiveLoopAsync(socket, token).ConfigureAwait(false);
+                            await sender.ConfigureAwait(false);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            token.ThrowIfCancellationRequested();
+                            return;
+                        }
+                        catch (Exception error)
+                        {
+                            Status = $"Error ({scheme}): " + error.Message;
+                        }
+                        finally
+                        {
+                            Connected = false;
+                        }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
-                    catch (Exception error)
-                    {
-                        Status = "Error: " + error.Message;
-                    }
-                    finally
-                    {
-                        Connected = false;
-                    }
+
+                    // The socket was up and later dropped: that is not a scheme
+                    // problem, so the other one is not worth trying.
+                    if (reached) break;
+                    if (token.IsCancellationRequested) break;
                 }
 
                 if (token.IsCancellationRequested) break;

@@ -15,7 +15,7 @@ namespace SoulstoneAP
         public const string Guid = "soulstone.ap.bridge";
         // Shown in the panel status line, so a game left running on an older
         // DLL is obvious instead of looking like a broken command.
-        public const string Version = "1.0.1";
+        public const string Version = "1.0.2";
 
         public static Plugin Instance { get; private set; }
 

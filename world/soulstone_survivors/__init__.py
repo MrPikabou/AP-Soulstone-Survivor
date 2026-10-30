@@ -13,7 +13,7 @@ from Options import (
     Range,
     Toggle,
 )
-from worlds.AutoWorld import World
+from worlds.AutoWorld import World, data_package_checksum
 
 from . import data, endgame
 from .Items import (
@@ -367,6 +367,7 @@ class SoulstoneSurvivorsWorld(World):
             {entry.id: entry.name for entry in self.endgame_entries}
         )
         type(self).location_names = frozenset(self.location_name_to_id)
+        self.refresh_data_package_checksum()
 
         logging.info(
             "%s: %d endgame checks (%s difficulty)",
@@ -384,6 +385,25 @@ class SoulstoneSurvivorsWorld(World):
             ", ".join(excluded) or "none",
             self.options.max_prestige.value,
             bool(self.options.hidden_achievements.value),
+        )
+
+    def refresh_data_package_checksum(self) -> None:
+        """Re-hash the game's datapackage after the seed's endgame names were added.
+
+        ``worlds.network_data_package`` records a checksum next to a live reference
+        to ``location_name_to_id``, computed once at startup. Updating that dict for
+        the seed changes the datapackage that goes into the multidata, so the old
+        checksum no longer describes it and the file fails to verify itself (the
+        hosting site and any client comparing checksums reject it).
+        """
+        import worlds  # local: worlds is still importing while this module loads
+
+        package = worlds.network_data_package["games"].get(self.game)
+        if package is None:
+            return
+        package["location_name_to_id"] = dict(self.location_name_to_id)
+        package["checksum"] = data_package_checksum(
+            {key: value for key, value in sorted(package.items()) if key != "checksum"}
         )
 
     def active_locations(self):
