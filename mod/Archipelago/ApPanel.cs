@@ -25,7 +25,7 @@ namespace SoulstoneAP
     public sealed class ApPanel : MonoBehaviour
     {
         private const float PanelWidth = 560f;
-        private const float PanelHeight = 440f;
+        private const float PanelHeight = 560f;
         private const int MaxFieldLength = 120;
 
         private static readonly Color PanelColor = new Color(0.09f, 0.09f, 0.12f, 0.97f);
@@ -66,6 +66,8 @@ namespace SoulstoneAP
         private TextMeshProUGUI _statusText;
         private TextMeshProUGUI _errorText;
         private TextMeshProUGUI _connectLabel;
+        private TextMeshProUGUI _receivedText;
+        private string _receivedShown = "";
 
         private Texture2D _logo;
         private float _bootTime;
@@ -470,6 +472,16 @@ namespace SoulstoneAP
                 new Vector2(0f, -398f), new Vector2(PanelWidth - 40f, 34f));
             _statusText.enableWordWrapping = true;
 
+            // A short running list of what actually arrived, and who sent it.
+            MakeText(root, "ReceivedTitle", "Received from the multiworld", 12f,
+                TextAlignmentOptions.Center, MutedColor, new Vector2(0f, -440f),
+                new Vector2(PanelWidth - 40f, 18f));
+
+            _receivedText = MakeText(root, "Received", "nothing yet", 13f,
+                TextAlignmentOptions.TopLeft, new Color(0.82f, 0.85f, 0.90f, 1f),
+                new Vector2(0f, -460f), new Vector2(PanelWidth - 80f, 84f));
+            _receivedText.enableWordWrapping = true;
+
             RefreshFieldTexts();
             return root.gameObject;
         }
@@ -663,6 +675,16 @@ namespace SoulstoneAP
 
             if (_errorText != null) _errorText.text = _error;
             if (_connectLabel != null) _connectLabel.text = running ? "Disconnect" : "Connect";
+
+            if (_receivedText != null)
+            {
+                var summary = runtime == null ? "" : runtime.ReceivedSummary;
+                if (summary != _receivedShown)
+                {
+                    _receivedShown = summary;
+                    _receivedText.text = string.IsNullOrEmpty(summary) ? "nothing yet" : summary;
+                }
+            }
         }
 
         // ------------------------------------------------------------------ logo

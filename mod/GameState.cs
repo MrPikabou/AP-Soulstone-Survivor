@@ -814,6 +814,15 @@ namespace SoulstoneAP
                 if (util == null) return "ERR save system unavailable";
                 if (util.IsSaveInProgress()) return "BUSY";
 
+                // Entries written by older builds may have null affix lists; the
+                // serializer would throw on them exactly like a fresh one.
+                foreach (var kind in kinds)
+                {
+                    if (kind != SaveFileKind.MapProgression) continue;
+                    RepairMapEntries(profile);
+                    break;
+                }
+
                 var files = new Il2CppStructArray<SaveFileKind>(kinds.Length);
                 for (var i = 0; i < kinds.Length; i++) files[i] = kinds[i];
                 util.RequestSaveFiles(profile, files);
@@ -944,7 +953,36 @@ namespace SoulstoneAP
             entry.MapId = mapId;
             entry.NormalModeCompleteness = 0f;
             entry.AffixesDisabled = false;
+
+            // The save serializer walks all three lists, so a hand-made entry has to
+            // create them: leaving them null crashes RequestSaveMapProgression with a
+            // NullReferenceException and takes the whole save with it.
+            entry.SelectedAffixes = new Il2CppSystem.Collections.Generic.List<string>();
+            entry.CompletedAffixes = new Il2CppSystem.Collections.Generic.List<string>();
+            entry.AffixTierProgression =
+                new Il2CppSystem.Collections.Generic.List<PlayerProfileAffixTierProgressionData>();
+
             profile.MapProgression.MapProgression.Add(entry);
+        }
+
+        /// <summary>Gives every map entry the lists the save serializer walks.</summary>
+        private static void RepairMapEntries(PlayerProfile profile)
+        {
+            try
+            {
+                foreach (var map in profile.MapProgression.MapProgression)
+                {
+                    if (map == null) continue;
+                    if (map.SelectedAffixes == null)
+                        map.SelectedAffixes = new Il2CppSystem.Collections.Generic.List<string>();
+                    if (map.CompletedAffixes == null)
+                        map.CompletedAffixes = new Il2CppSystem.Collections.Generic.List<string>();
+                    if (map.AffixTierProgression == null)
+                        map.AffixTierProgression =
+                            new Il2CppSystem.Collections.Generic.List<PlayerProfileAffixTierProgressionData>();
+                }
+            }
+            catch (Exception e) { Log?.LogDebug("map entry repair: " + e.Message); }
         }
 
         /// <summary>

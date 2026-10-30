@@ -15,7 +15,7 @@ namespace SoulstoneAP
         public const string Guid = "soulstone.ap.bridge";
         // Shown in the panel status line, so a game left running on an older
         // DLL is obvious instead of looking like a broken command.
-        public const string Version = "1.0.2";
+        public const string Version = "1.0.4";
 
         public static Plugin Instance { get; private set; }
 
@@ -40,6 +40,9 @@ namespace SoulstoneAP
 
         /// <summary>How many of the seed's items have already been applied. Set to 0 to re-apply everything.</summary>
         internal static ConfigEntry<int> AppliedItems;
+
+        /// <summary>Seed + slot the <see cref="AppliedItems"/> counter belongs to. A new seed resets it.</summary>
+        internal static ConfigEntry<string> AppliedSeed;
 
         public override void Load()
         {
@@ -79,6 +82,8 @@ namespace SoulstoneAP
                 "Open the panel once by itself when the save you picked has loaded. F8 always toggles it.");
             AppliedItems = Config.Bind("Archipelago", "AppliedItems", 0,
                 "Internal: number of received items already applied. Reset to 0 to re-apply the whole seed.");
+            AppliedSeed = Config.Bind("Archipelago", "AppliedSeed", "",
+                "Internal: seed and slot the AppliedItems counter belongs to. Joining a different seed starts the counter over.");
 
             GameState.Log = Log;
             // Both gates are active from the first frame, not once a slot is joined:

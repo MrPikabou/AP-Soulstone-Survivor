@@ -36,6 +36,15 @@ namespace SoulstoneAP
 
         private readonly List<PendingGrant> _pendingGrants = new List<PendingGrant>();
 
+        // What has arrived this session, newest last, for the panel's received list.
+        private const int MaxReceivedLines = 5;
+        private readonly List<string> _received = new List<string>();
+        private readonly Dictionary<int, string> _playerNames = new Dictionary<int, string>();
+        private int _ourSlot = -1;
+
+        /// <summary>The last few received items, one per line, as shown in the panel.</summary>
+        public string ReceivedSummary => _received.Count == 0 ? "" : string.Join("\n", _received);
+
         private bool _joined;
         private bool _autoConnectTried;
         private float _saveAt = -1f;
@@ -156,6 +165,7 @@ namespace SoulstoneAP
         {
             if (_pendingGrants.Count == 0) return;
 
+            var changed = false;
             for (var i = 0; i < _pendingGrants.Count; i++)
             {
                 var pending = _pendingGrants[i];
@@ -166,8 +176,13 @@ namespace SoulstoneAP
                 _pendingGrants.RemoveAt(i);
                 AdvanceApplied(pending.Index + 1);
                 _saveAt = Time.unscaledTime + 1f;
+                changed = true;
                 i--;
             }
+
+            // The counter has to survive a crash too, or the same item is handed
+            // out again on the next launch.
+            if (changed) Plugin.Instance?.Config.Save();
         }
 
         private void AdvanceApplied(int count)
@@ -281,6 +296,10 @@ namespace SoulstoneAP
             _sentChecks.Clear();
 
             var slot = JsonParser.GetInt(message, "slot", -1);
+            _ourSlot = slot;
+            _received.Clear();
+            ReadPlayerNames(message);
+
             var players = message.TryGetValue("slot_info", out var info)
                 ? JsonParser.AsObject(info)?.Count ?? 0
                 : 0;
@@ -289,10 +308,121 @@ namespace SoulstoneAP
             if (message.TryGetValue("slot_data", out var slotData) && JsonParser.AsObject(slotData) is { } data)
                 ParseSlotData(data, out seed);
 
+            // The applied-items counter only means anything for the seed it was built
+            // on. Joining a different room or slot used to keep the old count, which
+            // silently skipped every item below it (a fresh profile then received
+            // nothing at all).
+            SyncAppliedSeed(JsonParser.GetString(message, "seed_name", ""), slot);
+
             _joinStatus = $"slot {slot}, {seed}";
             Log?.LogInfo($"AP: joined slot {slot} ({players} slots), {_itemCommands.Count} items, " +
                          $"{_mapLocations.Count} maps, {_achievementLocations.Count} achievements, " +
                          $"{EndgameChecks.Count} endgame checks");
+        }
+
+        /// <summary>Slot number to player name, so a received item can say who sent it.</summary>
+        private void ReadPlayerNames(Dictionary<string, object> message)
+        {
+            _playerNames.Clear();
+            if (!message.TryGetValue("players", out var raw) || JsonParser.AsArray(raw) is not { } players) return;
+
+            foreach (var entry in players)
+            {
+                var player = JsonParser.AsObject(entry);
+                if (player == null) continue;
+                var slot = JsonParser.GetInt(player, "slot", -1);
+                if (slot < 0) continue;
+                var name = JsonParser.GetString(player, "alias", "");
+                if (string.IsNullOrEmpty(name)) name = JsonParser.GetString(player, "name", "");
+                _playerNames[slot] = name;
+            }
+        }
+
+        /// <summary>Remembers one received item for the panel, with who sent it.</summary>
+        private void NoteReceived(string command, Dictionary<string, object> item)
+        {
+            var sender = JsonParser.GetInt(item, "player", -1);
+            string from;
+            if (sender >= 0 && sender == _ourSlot) from = "you";
+            else if (sender >= 0 && _playerNames.TryGetValue(sender, out var name) && !string.IsNullOrEmpty(name)) from = name;
+            else from = "another world";
+
+            _received.Add(Describe(command) + "  <- " + from);
+            while (_received.Count > MaxReceivedLines) _received.RemoveAt(0);
+        }
+
+        /// <summary>Item command (`Weapon:WeaponBarbarian-02`) to something a player recognises.</summary>
+        private static string Describe(string command)
+        {
+            var colon = command.IndexOf(':');
+            var kind = colon > 0 ? command.Substring(0, colon) : command;
+            var value = colon > 0 ? command.Substring(colon + 1) : "";
+
+            switch (kind)
+            {
+                case "Char":
+                    return Spaced(value) + " (character)";
+                case "Weapon":
+                    return Spaced(Strip(value, "Weapon")) + " (weapon)";
+                case "Rune":
+                    return Spaced(Strip(value, "Rune")) + " (rune)";
+                case "Map":
+                    return Spaced(Strip(value, "Survivors")) + " (map)";
+                case "Mode":
+                    if (value == "Mastery") return "Unholy Cathedral (mode)";
+                    if (value == "Crusade") return "Titan Hunt (mode)";
+                    return value + " (mode)";
+                case "Curse":
+                    return "Curse tier " + value;
+                case "WeaponCap":
+                    return value == "-1" ? "Weapon upgrades: unlimited" : "Weapon upgrades +" + value;
+                case "Souls":
+                {
+                    var parts = value.Split(':');
+                    var amount = parts[parts.Length - 1];
+                    var name = parts.Length > 1 ? parts[0] : "minor";
+                    return amount + " " + Spaced(name) + " soulstones";
+                }
+                case "Resource":
+                    return "Resource Cache";
+                case "Trap":
+                    return "Trap: " + value;
+                default:
+                    return command;
+            }
+        }
+
+        private static string Strip(string value, string prefix)
+        {
+            return value != null && value.StartsWith(prefix, StringComparison.Ordinal) ? value.Substring(prefix.Length) : value;
+        }
+
+        /// <summary>Camel-case ids to words: `GuaranteedMinimumRarity` -> `Guaranteed Minimum Rarity`.</summary>
+        private static string Spaced(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text ?? "";
+            var builder = new StringBuilder(text.Length + 8);
+            for (var i = 0; i < text.Length; i++)
+            {
+                var character = text[i];
+                if (i > 0 && char.IsUpper(character) && !char.IsUpper(text[i - 1]) && text[i - 1] != ' ')
+                    builder.Append(' ');
+                builder.Append(character);
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>Starts the applied-items counter over when the seed or slot changed.</summary>
+        private void SyncAppliedSeed(string seedName, int slot)
+        {
+            var identity = (string.IsNullOrEmpty(seedName) ? "?" : seedName) + "|" + Plugin.Slot.Value + "|" + slot;
+            if (string.Equals(Plugin.AppliedSeed.Value, identity, StringComparison.Ordinal)) return;
+
+            var previous = Plugin.AppliedItems.Value;
+            Plugin.AppliedSeed.Value = identity;
+            Plugin.AppliedItems.Value = 0;
+            Plugin.Instance?.Config.Save();
+            Log?.LogInfo($"AP: new seed '{identity}' - replaying all {previous} previously counted item(s)");
         }
 
         private void ParseSlotData(Dictionary<string, object> slotData, out string summary)
@@ -416,7 +546,10 @@ namespace SoulstoneAP
                     var replayedItem = JsonParser.AsObject(items[i]);
                     if (replayedItem != null &&
                         _itemCommands.TryGetValue(JsonParser.GetInt(replayedItem, "item", -1), out var replayedCommand))
+                    {
                         RememberItem(replayedCommand);
+                        NoteReceived(replayedCommand, replayedItem);
+                    }
                     continue;
                 }
 
@@ -430,6 +563,8 @@ namespace SoulstoneAP
                     AdvanceApplied(globalIndex + 1);
                     continue;
                 }
+
+                NoteReceived(command, item);
 
                 // Traps act on the live run, not the save, so they never queue.
                 if (command.StartsWith("Trap:", StringComparison.Ordinal))

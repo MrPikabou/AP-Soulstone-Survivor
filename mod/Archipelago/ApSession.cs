@@ -69,33 +69,54 @@ namespace SoulstoneAP
                 foreach (var scheme in SchemesFor(host))
                 {
                     var reached = false;
-                    using (var socket = new ClientWebSocket())
-                    {
-                        try
-                        {
-                            socket.Options.KeepAliveInterval = TimeSpan.FromSeconds(20);
-                            Status = $"Connecting to {scheme}://{host}:{port}...";
-                            await socket.ConnectAsync(new Uri($"{scheme}://{host}:{port}"), token).ConfigureAwait(false);
-                            reached = true;
-                            Status = "Connected, joining slot...";
 
-                            var sender = Task.Run(() => SendLoopAsync(socket, token), token);
-                            await ReceiveLoopAsync(socket, token).ConfigureAwait(false);
-                            await sender.ConfigureAwait(false);
-                        }
-                        catch (OperationCanceledException)
+                    // The server warns about uncompressed sockets and will require
+                    // permessage-deflate eventually, so offer it first. If that
+                    // handshake fails, a plain socket is tried before giving up -
+                    // a compression mismatch should not leave anyone disconnected.
+                    foreach (var compress in new[] { true, false })
+                    {
+                        using (var socket = new ClientWebSocket())
                         {
-                            token.ThrowIfCancellationRequested();
-                            return;
+                            try
+                            {
+                                socket.Options.KeepAliveInterval = TimeSpan.FromSeconds(20);
+                                if (compress)
+                                {
+                                    // The server offers 11-bit windows for both sides.
+                                    socket.Options.DangerousDeflateOptions = new WebSocketDeflateOptions
+                                    {
+                                        ClientMaxWindowBits = 11,
+                                        ServerMaxWindowBits = 11,
+                                    };
+                                }
+
+                                Status = $"Connecting to {scheme}://{host}:{port}...";
+                                await socket.ConnectAsync(new Uri($"{scheme}://{host}:{port}"), token).ConfigureAwait(false);
+                                reached = true;
+                                Status = "Connected, joining slot...";
+
+                                var sender = Task.Run(() => SendLoopAsync(socket, token), token);
+                                await ReceiveLoopAsync(socket, token).ConfigureAwait(false);
+                                await sender.ConfigureAwait(false);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                token.ThrowIfCancellationRequested();
+                                return;
+                            }
+                            catch (Exception error)
+                            {
+                                Status = $"Error ({scheme}{(compress ? " + compression" : "")}): " + error.Message;
+                                if (compress) continue;   // retry this scheme without it
+                            }
+                            finally
+                            {
+                                Connected = false;
+                            }
                         }
-                        catch (Exception error)
-                        {
-                            Status = $"Error ({scheme}): " + error.Message;
-                        }
-                        finally
-                        {
-                            Connected = false;
-                        }
+
+                        break;
                     }
 
                     // The socket was up and later dropped: that is not a scheme

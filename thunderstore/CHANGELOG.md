@@ -1,3 +1,25 @@
+# 1.0.4
+
+- The F8 panel now lists the last five items it received, each with a readable name
+  (for example `Guaranteed Minimum Rarity (rune)`) and the player who sent it.
+- README notes the new received list.
+
+# 1.0.3
+
+Bug fixes for joining a hosted room.
+
+- Items received for a new seed are applied again. The `AppliedItems` counter used to
+  carry over between rooms, so joining a different multiworld skipped every item below the
+  old count and a fresh save received nothing (characters, weapons and runes included).
+  The counter now belongs to the seed and slot it was built on.
+- Writing the maps a seed unlocks by default no longer crashes the save with
+  `NullReferenceException` in `PlayerDataUtil.RequestSaveMapProgression`. Hand-made map
+  entries now create the affix lists the serializer walks, so the maps are actually saved.
+- The websocket now offers per-message compression, which the server expects and used to
+  warn about; a plain connection is still tried if that handshake fails.
+- Items applied on a retry (received before the save slot was picked) persist their
+  progress, so they are not handed out a second time after a restart.
+
 # 1.0.2
 
 Bug fixes.

@@ -51,6 +51,9 @@ EventSystem selection every frame (click selects all, then deselects), so the
 fields capture keystrokes directly from the Input System into their own buffers.
 Click a field to focus it, click outside the panel to drop focus. IMGUI is not
 usable in this build at all (`GUI.DoTextField` throws "Method unstripping failed").
+Under the connection status the panel keeps the last five items it received
+(readable name plus the player who sent them), so it is obvious what the
+multiworld has handed over.
 Settings are saved to the plugin config, and the world sends its item/location
 id mapping in `slot_data`, so the panel needs no external files.
 
