@@ -486,6 +486,11 @@ namespace SoulstoneAP
                 }
             }
 
+            // The first map must be startable in every seed, even when its item
+            // never arrives. The map screen repeats this in case the profile was
+            // not loaded yet when the slot data landed.
+            GameState.EnsureStartingMap();
+
             if (slotData.TryGetValue("achievements", out var achievements) &&
                 JsonParser.AsObject(achievements) is { } achMap)
                 foreach (var entry in achMap)

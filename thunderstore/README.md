@@ -7,6 +7,7 @@ other players' checks, and the mod gives you a connect panel inside the game.
 This mod is the **game side**. To share or join a run you also need the
 `Soulstone Survivors` world file (`soulstone_survivors.apworld`) for the Archipelago
 program that generates the seed - the host installs it, players joining a room do not.
+APWorld --> `https://github.com/MrPikabou/AP-Soulstone-Survivor/releases`
 
 ## Requirements
 

@@ -373,6 +373,17 @@ namespace SoulstoneAP
             }
 
             if (string.IsNullOrEmpty(mapId)) return true;
+
+            // The first map is playable in every seed and under every setting. A
+            // player who never receives its item would otherwise be stuck on the
+            // map screen with nothing to start; the Clear check still needs the
+            // item, so nothing is handed out by opening it.
+            if (string.Equals(mapId, GameState.StartingMap, StringComparison.OrdinalIgnoreCase))
+            {
+                GameState.EnsureStartingMap();
+                return true;
+            }
+
             return GameState.GrantedMaps.Contains(mapId);
         }
 

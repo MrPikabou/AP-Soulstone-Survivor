@@ -209,7 +209,7 @@ namespace SoulstoneAP
 
             try
             {
-                _pausePanel = UnityEngine.Object.FindObjectOfType<PausePanelManager>();
+                _pausePanel = FindPausePanel();
                 _alreadyPaused = _pausePanel != null && _pausePanel.IsPaused;
                 if (!_alreadyPaused) _pausePanel?.SetPauseState(true);
             }
@@ -221,7 +221,31 @@ namespace SoulstoneAP
             }
 
             Time.timeScale = 0f;
-            Log?.LogInfo($"AP: paused for the curse choice (panel={_pausePanel != null}, alreadyPaused={_alreadyPaused})");
+            Log?.LogInfo($"AP: paused for the curse choice (panel={_pausePanel != null}, alreadyPaused={_alreadyPaused}, timeScale was {_previousTimeScale}, now {Time.timeScale})");
+        }
+
+        /// <summary>
+        /// The pause panel is inactive almost all the time, so FindObjectOfType
+        /// never sees it; the active GameplayUIManager still holds the reference,
+        /// and inactive objects need FindObjectsOfTypeAll.
+        /// </summary>
+        private static PausePanelManager FindPausePanel()
+        {
+            try
+            {
+                var ui = UnityEngine.Object.FindObjectOfType<GameplayUIManager>();
+                if (ui != null && ui.PausePanel != null) return ui.PausePanel;
+            }
+            catch (Exception error)
+            {
+                Log?.LogDebug("AP: no GameplayUIManager for the pause panel: " + error.Message);
+            }
+
+            var active = UnityEngine.Object.FindObjectOfType<PausePanelManager>();
+            if (active != null) return active;
+
+            var all = UnityEngine.Resources.FindObjectsOfTypeAll<PausePanelManager>();
+            return all != null && all.Length > 0 ? all[0] : null;
         }
 
         private void Unpause()
@@ -248,10 +272,6 @@ namespace SoulstoneAP
         {
             if (_root == null) return;
 
-            // The game's own menus write to timeScale, so keep re-asserting it.
-            if (_pausedByUs && Time.timeScale != 0f) Time.timeScale = 0f;
-            if (_pausedByUs && _pausePanel != null && !_pausePanel.IsPaused) _pausePanel.SetPauseState(true);
-
             try
             {
                 var health = _player == null ? null : _player._health;
@@ -269,6 +289,20 @@ namespace SoulstoneAP
                 Close();
                 Unpause();
             }
+        }
+
+        /// <summary>
+        /// LateUpdate runs after the game's own Update pass. The game resets
+        /// Time.timeScale every frame while it believes nothing is paused, so the
+        /// hold has to happen last in the frame or the next frame runs at full
+        /// speed and enemies keep attacking behind the prompt.
+        /// </summary>
+        private void LateUpdate()
+        {
+            if (!_pausedByUs) return;
+
+            if (Time.timeScale != 0f) Time.timeScale = 0f;
+            if (_pausePanel != null && !_pausePanel.IsPaused) _pausePanel.SetPauseState(true);
         }
 
         private void RefreshCounter()

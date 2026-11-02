@@ -76,6 +76,39 @@ namespace SoulstoneAP
         /// <summary>Map ids this slot has actually received, kept across reconnects.</summary>
         public static readonly HashSet<string> GrantedMaps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>
+        /// The map every profile starts on. It has to be playable in every seed:
+        /// with map items on, a player whose first map item never arrives would
+        /// otherwise sit on the map screen with nothing to start.
+        /// </summary>
+        public const string StartingMap = "SurvivorsDesert";
+
+        private static bool _startingMapEnsured;
+
+        /// <summary>
+        /// Writes the starting map's progression entry when the save is missing it.
+        /// Safe to call from UI code: it touches the save at most once per session,
+        /// and only when the entry is actually absent.
+        /// </summary>
+        public static void EnsureStartingMap()
+        {
+            if (_startingMapEnsured) return;
+            if (!TryGetProfile(out var profile, out _)) return;
+
+            _startingMapEnsured = true;
+            try
+            {
+                if (HasMap(profile, StartingMap)) return;
+                AddMapEntry(profile, StartingMap);
+                Save(SaveFileKind.MapProgression);
+                Log?.LogInfo($"wrote the starting map entry ({StartingMap}) - it must always be playable");
+            }
+            catch (Exception e)
+            {
+                Log?.LogDebug("starting map entry: " + e.Message);
+            }
+        }
+
         private static bool TryGetProfile(out PlayerProfile profile, out string error)
         {
             profile = null;
