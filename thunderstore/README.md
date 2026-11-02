@@ -6,7 +6,7 @@ other players' checks, and the mod gives you a connect panel inside the game.
 
 This mod is the **game side**. To share or join a run you also need the
 `Soulstone Survivors` world file (`soulstone_survivors.apworld`) for the Archipelago
-program that generates the seed — the host installs it, players joining a room do not.
+program that generates the seed - the host installs it, players joining a room do not.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ program that generates the seed — the host installs it, players joining a room
 
 ## Install
 
-Install through the Thunderstore Mod Manager or r2modman like any other mod — the BepInEx pack
+Install through the Thunderstore Mod Manager or r2modman like any other mod - the BepInEx pack
 comes with it. Launch the game once, then edit `BepInEx/config/soulstone.ap.bridge.cfg` if you
 want to change defaults.
 

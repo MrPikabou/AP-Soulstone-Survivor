@@ -1338,7 +1338,7 @@ namespace SoulstoneAP
 
         /// <summary>
         /// Marks a map (or every map in the save) as fully cleared. The affix
-        /// panel — the I-VII badges and the curse checkbox on the map screen —
+        /// panel - the I-VII badges and the curse checkbox on the map screen -
         /// only comes alive for a map the save has beaten, so this is the test
         /// switch for seeing curse selection. Note that `Clear <map>` checks read
         /// the same value, so they will fire for whatever this touches.

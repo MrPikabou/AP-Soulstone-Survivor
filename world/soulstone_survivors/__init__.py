@@ -234,25 +234,67 @@ class SoulstoneEndgameChecks(Choice):
     intensity), Unholy Cathedral rituals (Sin, Hate, Heresy) and Titan Hunt
     sigils (Corruption, Vileness, Wickedness, Hate, Void).
 
-    off  - plain maps + achievements only.
-    easy - global clears: every map at curse 10 and 20, all three rituals, all
-           five sigils, and Ritual of Heresy / Corruption +1.
-    medium - curse 10 to 50, one randomised "five different characters" curse
-           check per map, the five-character ritual/sigil clears, and endless
-           up to +5.
-    hard - adds curse 62, two randomised curse/weapon combos per map, every
-           ritual and sigil per character, and endless up to +10.
+    off    - plain maps + achievements only.
+    easy   - every map at curse 10 and 20, all three rituals, all five sigils,
+             and Ritual of Heresy / Corruption +1.
+    medium - curse 10 to 50, randomised five-character checks, and endless up
+             to +5.
+    hard   - curse 10 to 62, two randomised curse/weapon combos per map, every
+             ritual and sigil per character, and endless up to +7.
+    insane - the hard checks with endless up to +10.
+    custom - build your own with the Endgame Custom options below.
 
     Weapon checks are logic-gated: they need the weapon and its character, and
     the character's own unlock is never shuffled into a check it gates.
     """
 
-    display_name = "Endgame Checks"
+    display_name = "Endgolad"
     option_off = 0
     option_easy = 1
     option_medium = 2
     option_hard = 3
+    option_insane = 4
+    option_custom = 5
     default = 2
+
+
+class SoulstoneEndgameCurseMax(Range):
+    """Custom only: highest curse level in the curse ladder (10 to 62, steps of 10).
+
+    62 is the game's top intensity and is always added at the top when set.
+    """
+
+    display_name = "Endgame Custom: Curse Max"
+    range_start = 0
+    range_end = 62
+    default = 50
+
+
+class SoulstoneEndgameRitualMax(Range):
+    """Custom only: highest Unholy Cathedral ritual tier to check (0 = none, 1 = Sin, 2 = Hate, 3 = Heresy)."""
+
+    display_name = "Endgame Custom: Ritual Max"
+    range_start = 0
+    range_end = 3
+    default = 3
+
+
+class SoulstoneEndgameSigilMax(Range):
+    """Custom only: highest Titan Hunt sigil to check (0 = none, 1 = Corruption ... 5 = Void)."""
+
+    display_name = "Endgame Custom: Sigil Max"
+    range_start = 0
+    range_end = 5
+    default = 5
+
+
+class SoulstoneEndgameEndless(Range):
+    """Custom only: how far the endless +N ladders go (Ritual of Heresy +N and Corruption +N). 0 = none."""
+
+    display_name = "Endgame Custom: Endless Max"
+    range_start = 0
+    range_end = 10
+    default = 5
 
 
 # The valid names come from the installed build's catalog, so they cannot be
@@ -274,6 +316,10 @@ class SoulstoneOptions(PerGameCommonOptions):
     max_prestige: SoulstoneMaxPrestige
     hidden_achievements: SoulstoneHiddenAchievements
     endgame_checks: SoulstoneEndgameChecks
+    endgame_curse_max: SoulstoneEndgameCurseMax
+    endgame_ritual_max: SoulstoneEndgameRitualMax
+    endgame_sigil_max: SoulstoneEndgameSigilMax
+    endgame_endless: SoulstoneEndgameEndless
     map_unlocks: SoulstoneMapUnlocks
     curse_tier_unlocks: SoulstoneCurseTierUnlocks
     endgame_mode_unlocks: SoulstoneEndgameModeUnlocks
@@ -333,9 +379,16 @@ class SoulstoneSurvivorsWorld(World):
         self.endgame_characters = [
             character for character in data.CHARACTERS if character not in excluded
         ]
+        profile = endgame.profile_for(
+            self.endgame_difficulty,
+            curse_max=self.options.endgame_curse_max.value,
+            ritual_max=self.options.endgame_ritual_max.value,
+            sigil_max=self.options.endgame_sigil_max.value,
+            endless=self.options.endgame_endless.value,
+        )
         self.endgame_entries = endgame.build(
             self,
-            self.endgame_difficulty,
+            profile,
             self.endgame_characters,
             bool(self.options.weapon_unlocks.value),
         )
@@ -345,11 +398,6 @@ class SoulstoneSurvivorsWorld(World):
         self.gate_curse_tiers = bool(self.options.curse_tier_unlocks.value) and bool(CURSE_TIER_ITEMS)
         self.weapon_cap_unlocks = bool(self.options.weapon_upgrade_unlocks.value) and bool(WEAPON_CAP_ITEMS)
         self.maps_as_items = bool(self.options.map_unlocks.value)
-        if self.maps_as_items:
-            # Local early items land on this player's own first checks, so the
-            # maps are in hand after a couple of clears instead of sphere six.
-            for item_name in MAP_ITEMS:
-                self.multiworld.local_early_items[self.player][item_name] = 1
 
         self.gate_endgame_modes = bool(self.options.endgame_mode_unlocks.value) and any(
             entry.spec.get("kind") in ("ritual", "titan") for entry in self.endgame_entries
@@ -433,7 +481,10 @@ class SoulstoneSurvivorsWorld(World):
     def create_items(self) -> None:
         names = list(PROGRESSION_ITEMS)
         if self.maps_as_items:
-            names += MAP_ITEMS
+            # The first map is given at the start; the rest come from other players.
+            start_map = MAP_ITEM_PREFIX + data.MAPS[0]
+            self.multiworld.push_precollected(self.create_item(start_map))
+            names += [name for name in MAP_ITEMS if name != start_map]
         if self.gate_curse_tiers:
             names += CURSE_TIER_ITEMS
         if self.gate_endgame_modes:

@@ -33,12 +33,58 @@ DIFFICULTY_OFF = "off"
 DIFFICULTY_EASY = "easy"
 DIFFICULTY_MEDIUM = "medium"
 DIFFICULTY_HARD = "hard"
-DIFFICULTIES = (DIFFICULTY_OFF, DIFFICULTY_EASY, DIFFICULTY_MEDIUM, DIFFICULTY_HARD)
+DIFFICULTY_INSANE = "insane"
+DIFFICULTY_CUSTOM = "custom"
 
-# "with at least N different characters" checks added from medium upwards.
+# "with at least N different characters" checks added from extras level 1 upwards.
 MULTI_CHARACTER_COUNT = 5
-# Random weapon/curse combos per map, hard only.
+# Random weapon/curse combos per map, extras level 2 only.
 WEAPON_COMBOS_PER_MAP = 2
+
+
+def curse_ladder(max_curse):
+    """Curse levels that count as checks, from 10 up to max_curse.
+
+    Steps of 10, plus the game's top intensity (62) when it is reached.
+    """
+    levels = set(range(10, max_curse + 1, 10))
+    if max_curse >= data.MAX_CURSE:
+        levels.add(data.MAX_CURSE)
+    return sorted(levels)
+
+
+# Presets. `extras` 0 = plain checks, 1 = adds randomised and five-character
+# checks, 2 = also weapon/curse combos and every ritual and sigil per character.
+# `rituals` and `sigils` are the highest tier that counts (0 = none).
+PRESETS = {
+    DIFFICULTY_EASY: {
+        "curses": curse_ladder(20), "extras": 0, "rituals": 3, "sigils": 5, "endless": 1,
+    },
+    DIFFICULTY_MEDIUM: {
+        "curses": curse_ladder(50), "extras": 1, "rituals": 3, "sigils": 5, "endless": 5,
+    },
+    DIFFICULTY_HARD: {
+        "curses": curse_ladder(62), "extras": 2, "rituals": 3, "sigils": 5, "endless": 7,
+    },
+    DIFFICULTY_INSANE: {
+        "curses": curse_ladder(62), "extras": 2, "rituals": 3, "sigils": 5, "endless": 10,
+    },
+}
+
+
+def profile_for(difficulty, curse_max=0, ritual_max=0, sigil_max=0, endless=0):
+    """The check profile for the chosen endgolad preset, or None when off."""
+    if difficulty == DIFFICULTY_OFF:
+        return None
+    if difficulty == DIFFICULTY_CUSTOM:
+        return {
+            "curses": curse_ladder(curse_max),
+            "extras": 0,
+            "rituals": ritual_max,
+            "sigils": sigil_max,
+            "endless": endless,
+        }
+    return dict(PRESETS[difficulty])
 
 
 class Check:
@@ -67,9 +113,9 @@ def weapons_of(character):
     return [weapon for weapon in data.WEAPONS if data.weapon_owner(weapon) == character]
 
 
-def build(world, difficulty, characters, allow_weapons):
+def build(world, profile, characters, allow_weapons):
     """All endgame checks for one seed, in a stable order."""
-    if difficulty == DIFFICULTY_OFF:
+    if profile is None:
         return []
 
     entries = []
@@ -79,14 +125,18 @@ def build(world, difficulty, characters, allow_weapons):
         spec["kind"] = kind
         entries.append(Check(name, location_id(name), spec))
 
-    thresholds = data.CURSE_THRESHOLDS[difficulty]
+    thresholds = profile["curses"]
+    extras = profile["extras"]
+    endless = profile["endless"]
+    rituals = [ritual for ritual in data.RITUALS if ritual["tier"] <= profile["rituals"]]
+    sigils = [sigil for sigil in data.SIGILS if sigil["tier"] <= profile["sigils"]]
 
     # ---- Void Fields curse ladder
     for map_id in data.MAPS:
         for curse in thresholds:
             add("curse", f"Curse {curse}: {map_id}", {"map": map_id, "curse": curse})
 
-    if difficulty in (DIFFICULTY_MEDIUM, DIFFICULTY_HARD):
+    if extras >= 1 and thresholds:
         # One map gets a randomised "same curse, five different characters" goal
         # per map, drawn from the top of the ladder so it stays an endgame task.
         pool = thresholds[-3:]
@@ -98,7 +148,7 @@ def build(world, difficulty, characters, allow_weapons):
                 {"map": map_id, "curse": curse, "chars": MULTI_CHARACTER_COUNT},
             )
 
-    if difficulty == DIFFICULTY_HARD and allow_weapons:
+    if extras >= 2 and allow_weapons:
         eligible = enabled_weapons(characters, allow_weapons)
         if eligible:
             for map_id in data.MAPS:
@@ -112,23 +162,24 @@ def build(world, difficulty, characters, allow_weapons):
                     )
 
     # ---- Unholy Cathedral
-    heresy = data.RITUALS[-1]
-    for ritual in data.RITUALS:
+    top_ritual = rituals[-1] if rituals else None
+    for ritual in rituals:
         add("ritual", ritual["name"], {"tier": ritual["tier"]})
 
-    if difficulty in (DIFFICULTY_MEDIUM, DIFFICULTY_HARD):
+    if extras >= 1 and top_ritual:
         add(
             "ritual",
-            f"{heresy['name']} with {MULTI_CHARACTER_COUNT} characters",
-            {"tier": heresy["tier"], "chars": MULTI_CHARACTER_COUNT},
+            f"{top_ritual['name']} with {MULTI_CHARACTER_COUNT} characters",
+            {"tier": top_ritual["tier"], "chars": MULTI_CHARACTER_COUNT},
         )
 
-    for step in range(1, data.ENDLESS_DEPTH[difficulty] + 1):
-        add("ritual", f"{heresy['name']} +{step}", {"tier": heresy["tier"], "dynamic": step})
+    if top_ritual:
+        for step in range(1, endless + 1):
+            add("ritual", f"{top_ritual['name']} +{step}", {"tier": top_ritual["tier"], "dynamic": step})
 
-    if difficulty == DIFFICULTY_HARD:
+    if extras >= 2:
         for character in characters:
-            for ritual in data.RITUALS:
+            for ritual in rituals:
                 add(
                     "ritual",
                     f"{ritual['name']} as {character}",
@@ -136,24 +187,25 @@ def build(world, difficulty, characters, allow_weapons):
                 )
 
     # ---- Titan Hunt
-    corruption = data.SIGILS[0]
-    for sigil in data.SIGILS:
+    top_sigil = sigils[-1] if sigils else None
+    for sigil in sigils:
         add("titan", sigil["name"], {"tier": sigil["tier"]})
 
-    if difficulty in (DIFFICULTY_MEDIUM, DIFFICULTY_HARD):
-        void = data.SIGILS[-1]
+    if extras >= 1 and top_sigil:
         add(
             "titan",
-            f"{void['name']} with {MULTI_CHARACTER_COUNT} characters",
-            {"tier": void["tier"], "chars": MULTI_CHARACTER_COUNT},
+            f"{top_sigil['name']} with {MULTI_CHARACTER_COUNT} characters",
+            {"tier": top_sigil["tier"], "chars": MULTI_CHARACTER_COUNT},
         )
 
-    for step in range(1, data.ENDLESS_DEPTH[difficulty] + 1):
-        add("titan", f"{corruption['name']} +{step}", {"tier": corruption["tier"], "dynamic": step})
+    if sigils:
+        corruption = sigils[0]
+        for step in range(1, endless + 1):
+            add("titan", f"{corruption['name']} +{step}", {"tier": corruption["tier"], "dynamic": step})
 
-    if difficulty == DIFFICULTY_HARD:
+    if extras >= 2:
         for character in characters:
-            for sigil in data.SIGILS:
+            for sigil in sigils:
                 add(
                     "titan",
                     f"{sigil['name']} as {character}",

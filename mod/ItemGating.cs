@@ -8,7 +8,7 @@ namespace SoulstoneAP
     /// <summary>
     /// Makes characters, runes and the two endgame modes item-only.
     ///
-    /// The game's own routes are still there — an unlock achievement can award a
+    /// The game's own routes are still there - an unlock achievement can award a
     /// character, a mode unlocks when its RequiredAchievement completes, and a
     /// rune node can be bought with skill points. Each of those would hand out
     /// something the multiworld is supposed to provide, so they are blocked

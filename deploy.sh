@@ -28,5 +28,5 @@ if [ -d "$TSM_PROFILE" ]; then
   cp -f "$BUILT" "$TSM_PROFILE/BepInEx/plugins/"
   echo "deployed -> $TSM_PROFILE/BepInEx/plugins"
 else
-  echo "no Thunderstore profile at $TSM_PROFILE — skipped (set TSM_PROFILE to install there)"
+  echo "no Thunderstore profile at $TSM_PROFILE - skipped (set TSM_PROFILE to install there)"
 fi

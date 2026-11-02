@@ -187,17 +187,6 @@ def resolve_character(name):
 # Highest curse intensity the game offers on a Void Fields map.
 MAX_CURSE = 62
 
-# Curse thresholds that count as checks, per check difficulty. Higher tiers keep
-# the lower ones, so hard is a superset of medium and medium of easy.
-CURSE_THRESHOLDS = {
-    "easy": [10, 20],
-    "medium": [10, 20, 30, 40, 50],
-    "hard": [10, 20, 30, 40, 50, 62],
-}
-
-# How far the endless ladders go: Ritual of Heresy +N and Corruption +N.
-ENDLESS_DEPTH = {"easy": 1, "medium": 5, "hard": 10}
-
 # Unholy Cathedral rituals, in unlock order. The game stores these as
 # DifficultyTierType Copper / Silver / Gold and only opens Hate after Sin and
 # Heresy after Hate.

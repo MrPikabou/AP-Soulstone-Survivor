@@ -33,7 +33,7 @@ The game ignores unknown folders, so it is safe to keep it there.
 
 There are two equivalent ways to play: straight from the game, or via the Python
 client. Both apply the same items and report the same checks, so you can use
-whichever you prefer (running both is harmless — the server de-duplicates).
+whichever you prefer (running both is harmless - the server de-duplicates).
 
 **In game (recommended).** The plugin talks to the server itself:
 
@@ -59,18 +59,18 @@ id mapping in `slot_data`, so the panel needs no external files.
 
 Two config switches are worth knowing:
 
-* `Archipelago/AutoConnect` (default `false`) — join the saved server/slot on
+* `Archipelago/AutoConnect` (default `false`) - join the saved server/slot on
   launch without touching the panel.
-* `Panel/OpenAfterSaveLoad` (default `true`) — open the panel by itself the
+* `Panel/OpenAfterSaveLoad` (default `true`) - open the panel by itself the
   first time a save slot is loaded.
-* `Panel/ShowOnSlotScreen` (default `false`) — show the panel on the save-slot
+* `Panel/ShowOnSlotScreen` (default `false`) - show the panel on the save-slot
   screen at boot as well (the older behaviour).
-* `Safety/AllowedProfileIndex` (default `1`) — the only save slot the mod will
+* `Safety/AllowedProfileIndex` (default `1`) - the only save slot the mod will
   read or write.
-* `Gating/ItemOnlyUnlocks` (default `true`) — characters, rune nodes and the two
+* `Gating/ItemOnlyUnlocks` (default `true`) - characters, rune nodes and the two
   endgame modes may only be unlocked by an item; the in-game achievement routes
   are blocked (see below).
-* `Blacksmith/IgnoreWeaponLevelRequirements` (default `true`) — a weapon the save
+* `Blacksmith/IgnoreWeaponLevelRequirements` (default `true`) - a weapon the save
   already owns can be crafted and levelled at the blacksmith without the vanilla
   achievement behind it (`reach prestige level 10 with <character>`). Weapons the
   multiworld has not handed out still use the game's own check, so nothing can be
@@ -86,12 +86,12 @@ logs `Could not load Progression Data for characterId [...]`).
 A grant also re-runs the game's own reward scans for the unlock
 (`UpdateCraftWeaponAchievements`, `UpdateUnlockCharacterAchievements`, …) and
 rebuilds an already-open blacksmith or character screen, because the game
-otherwise only re-scans the save when a profile loads — without that, a weapon
+otherwise only re-scans the save when a profile loads - without that, a weapon
 written into `UnlockedWeapons` stayed inert (no craft achievement, no blacksmith
 entry) until the next restart.
 
 `RequestSaveAll` looks like the obvious call but silently writes nothing outside
-the game's own flow — it reports success and the files never change.
+the game's own flow - it reports success and the files never change.
 
 **Python client (optional, better logging).**
 
@@ -102,7 +102,7 @@ soulstone_client.py  <-- 127.0.0.1:47821 -->  SoulstoneAP.dll
 The plugin exposes a line protocol on loopback (`PING`, `STATE`, `CATALOG`,
 `GRANT item=...`) and does all game access on Unity's main thread. `GRANT` takes
 `Char:<id>`, `Weapon:<id>`, `Rune:<runeId>`, `Souls:<n>` (minor soulstones) or
-`Souls:<currency>:<n>` for any of the six — `minor`, `corrupted`, `vile`,
+`Souls:<currency>:<n>` for any of the six - `minor`, `corrupted`, `vile`,
 `wicked`, `hateful`, `rogue` (`Souls:Vile:500`). The client
 polls `STATE` once a second, sends `LocationChecks` for newly completed
 maps/achievements and applies received items. Everything is idempotent, so
@@ -116,7 +116,7 @@ python tools/build_apworld.py     # -> dist/soulstone_survivors.apworld
 
 The archive contains the whole world package (`__init__.py`, `Items.py`,
 `Locations.py`, `data.py`, `catalog.json`, `soulstone_client.py`), so it is self
-contained — no game files needed to generate.
+contained - no game files needed to generate.
 
 **For players:** in the Archipelago Launcher click **Install APWorld** and pick
 the file (or drop it into `<Archipelago>/worlds/`), then restart the Launcher.
@@ -124,7 +124,7 @@ the file (or drop it into `<Archipelago>/worlds/`), then restart the Launcher.
 Options** writes a YAML with every option below already documented.
 
 `catalog.json` is read through `importlib.resources`, so it also loads from
-inside the zip — a plain `open()` on the package folder silently finds nothing
+inside the zip - a plain `open()` on the package folder silently finds nothing
 there, which would leave the packaged world with no checks at all.
 
 Verified by removing the loose world folder, installing only the built
@@ -144,18 +144,18 @@ It builds the plugin, stages `thunderstore/` and packs the zip Thunderstore
 expects: `manifest.json`, `README.md`, `CHANGELOG.md` and `icon.png` at the root
 with the assembly at `BepInEx/plugins/SoulstoneAP.dll`. The version is copied
 out of `Plugin.cs` into the manifest, so the package cannot disagree with the
-DLL it carries — the failure mode that left `v0.7.3` in the panel once already.
+DLL it carries - the failure mode that left `v0.7.3` in the panel once already.
 The script also refuses a bad icon size, a name with illegal characters, an
 over-long description and a malformed dependency string.
 
 What lives where: `thunderstore/manifest.json` (name, description, dependency),
-`thunderstore/README.md` (the page people read in the mod manager — keep the
+`thunderstore/README.md` (the page people read in the mod manager - keep the
 mod-side instructions here, not the dev notes), `thunderstore/CHANGELOG.md`, and
 `thunderstore/icon.png` (256×256, generated from `mod/assets/ap-logo.png`).
 
 The dependency is `BepInEx-BepInExPack_IL2CPP-6.0.788`, the pack version the
 mod is built and tested against. Bump it in the manifest when moving to a newer
-pack, and re-test — interop assemblies come from that pack.
+pack, and re-test - interop assemblies come from that pack.
 
 **Uploading** (one-time setup, then per release):
 
@@ -164,7 +164,7 @@ pack, and re-test — interop assemblies come from that pack.
 2. Team page → **Upload package** → pick the community (Soulstone Survivors) and
    the zip above.
 3. The site returns the listing link immediately; mod managers can take up to
-   ~35 minutes to show it. Published versions are immutable — a mistake means a
+   ~35 minutes to show it. Published versions are immutable - a mistake means a
    new version number, not a re-upload.
 
 There is also a CLI: `dotnet tool install -g tcli`, a `thunderstore.toml` with
@@ -223,14 +223,14 @@ Runes have no unlock list of their own in the save: each one is granted by a
 dedicated skill tree node (`SkillTreeUnlockRuneSO`, which carries the rune id).
 The plugin dumps those nodes in the catalog, so every rune becomes
 
-* an item — `Rune: <runeId>` — and
-* a check — `Rune: <runeId>` — that ticks when the save owns that node.
+* an item - `Rune: <runeId>` - and
+* a check - `Rune: <runeId>` - that ticks when the save owns that node.
 
 Receiving the item unlocks the node outright at level 1, ignoring its tier
 requirement and prerequisite nodes (`PlayerProfileSkillTree.Add` + a `SkillTree`
 save), and the matching check is reported on the next poll. Everything else in
 the tree stays yours: stat nodes are still bought with your own skill points, and
-nothing blocks buying a rune node locally either — the item is a shortcut, not a
+nothing blocks buying a rune node locally either - the item is a shortcut, not a
 replacement. Because runes gate no other check they are classed as `useful`.
 
 **After the first launch of a plugin that knows about runes**, refresh the
@@ -248,7 +248,7 @@ Without that step the world simply generates with no rune items or checks.
 
 Four things the game would otherwise hand out on its own are forced to come
 from the multiworld (`Gating/ItemOnlyUnlocks`, and only for the mod's own save
-slot — every other slot behaves normally):
+slot - every other slot behaves normally):
 
 | Gate | Hook | Effect |
 | --- | --- | --- |
@@ -261,7 +261,7 @@ slot — every other slot behaves normally):
 Weapon gating follows the seed, and the signal is the seed's own item table: if
 it ships `weapon` items, crafting unknown weapons is blocked. Slot data also
 carries `weapons_default` (true when `weapon_unlocks` is off), which turns the
-gate back off — there is nothing to wait for in a seed with no weapon items. This
+gate back off - there is nothing to wait for in a seed with no weapon items. This
 means seeds generated before the flag existed are gated correctly too.
 
 Each block is logged once as `ItemGating: blocked …`, so a gate that never fires
@@ -270,7 +270,7 @@ is easy to tell from a gate that is not patched. The trick the mod uses is
 item (and the achievement it implies, which is what sends the check) through.
 
 Two consequences worth knowing: unlocks already in a save are never revoked, and
-a skill tree reset removes granted rune nodes along with everything else — run
+a skill tree reset removes granted rune nodes along with everything else - run
 `/resync` to have the client re-apply the runes it already sent.
 
 The in-game character tooltips still say "requires achievement …"; that text
@@ -278,13 +278,13 @@ lives in the localization assets, so it stays as is while the behaviour changes.
 
 ### Maps
 
-A map exists in the save as a `PlayerProfileMapProgressionData` entry — that is
+A map exists in the save as a `PlayerProfileMapProgressionData` entry - that is
 all the game keeps (there is no map-unlock flag anywhere in `MapDefinition` or
 `MapCollectionSO`), which is why a fresh profile has one entry, not five.
 
 With `map_unlocks` on (default) the five maps are `Map: <mapId>` progression
 items, each `Clear <map>` check requires its map item, and all five are
-registered as **local early items** — they land in that player's earliest
+registered as **local early items** - they land in that player's earliest
 reachable checks (verified: sphere 1 holds exactly the five maps, Victory falls
 into sphere 2) instead of somewhere mid-seed. Receiving one writes the map's
 progression entry and saves `SaveFileKind.MapProgression`, so it shows up in map
@@ -296,7 +296,7 @@ all five entries the first time it joins a seed whose slot data says
 
 **The map buttons are not ours.** The map list is a set of `MapItem` prefabs,
 and each one is locked by `MapItem.RequiredAchievement` /
-`IsRequiredAchievementCompleted` — achievement state, which the mod does not
+`IsRequiredAchievementCompleted` - achievement state, which the mod does not
 touch. So the game can still open a map on its own; the progression entry the
 item writes is what the map screen reads for progress and affixes, not what
 decides the lock. What *is* enforced is the payout: with `map_unlocks` on, both
@@ -305,7 +305,7 @@ map's item actually arrived (plugin log: `cleared X without its map item - check
 N not sent`). So a self-unlocked map still earns nothing.
 
 Bridge commands: `GRANT item=Map:SurvivorsForest`, and `MAPFULL map=all` (or
-`MAPFULL map=SurvivorsDesert`) to mark a map 100% cleared for testing — that is
+`MAPFULL map=SurvivorsDesert`) to mark a map 100% cleared for testing - that is
 what makes its affix panel usable, and it does fire its `Clear` check if the map
 item is in hand. `MAPRESET map=all|<mapId>` removes map progression entries, so
 the maps have to arrive as items again; note that this also drops that map's
@@ -317,7 +317,7 @@ already sent to the server stay sent.
 The I-VII badges on a map are `AffixTier`s. The save keeps one
 `PlayerProfileAffixTierProgressionData { Tier, Progression }` per tier per map,
 and `AffixCollectionSO.GetRequiredCurseLevelForTier(tier)` says which curse
-intensity a tier needs — the catalog ships that mapping as `affixTiers`.
+intensity a tier needs - the catalog ships that mapping as `affixTiers`.
 
 With `curse_tier_unlocks` on (default), each tier is a `Curse Tier I … VII`
 progression item. Receiving one writes tiers 1..N at `Progression = 1` into every
@@ -351,7 +351,7 @@ Bridge command: `GRANT item=Curse:5` (tier 5, and everything below it).
 ### Resource caches
 
 `Resource Cache` is a useful item with no fixed value, and it rolls a coin flip
-when it arrives — half pay out in resources, half in character XP.
+when it arrives - half pay out in resources, half in character XP.
 
 **Resources.** The plugin looks at what the save already holds (the six soulstone
 currencies plus every mineral in the inventory), picks one of those at random and
@@ -365,7 +365,7 @@ minor soulstones.
 percentage, so it means "roughly a level" at any depth.
 
 The level is written too, because the game only recomputes it inside its own
-match-end code — a save with 8171 prestige sat at level 1 across a reload until
+match-end code - a save with 8171 prestige sat at level 1 across a reload until
 this was added. The rule is measured, not guessed: the requirement table is flat
 (5000 for every level in this build), so `level = prestige / requirement + 1`,
 never lowered, capped at 150. The prestige achievements are then refreshed with
@@ -422,8 +422,8 @@ python tools/bridge_test.py "MATERIALS n=500"
 
 Unholy Cathedral and Titan Hunt are not open from the start: each `GameModeSO`
 carries a `RequiredAchievement`, and completing it is the game's own unlock path.
-With `endgame_mode_unlocks` on (default), two progression items — **Unholy
-Cathedral** and **Titan Hunt** — go into the pool, and receiving one completes that
+With `endgame_mode_unlocks` on (default), two progression items - **Unholy
+Cathedral** and **Titan Hunt** - go into the pool, and receiving one completes that
 mode achievement in the save (`AchievementCollectionSO.CompleteSpecificAchievement`,
 saved with the grant). Everything inside the mode stays vanilla: Sin → Hate →
 Heresy, and Corruption → Vileness → Wickedness → Hate → Void, each +N in order.
@@ -438,22 +438,22 @@ The bridge command behind the item is `Mode:Mastery` / `Mode:Crusade`.
 
 `disabled_characters` drops every check that names the character: its `Unlock`,
 `Prestige`, `CompleteSkillTree`, `CraftWeapon` / `CraftAllCharacterWeapons` and
-`CompleteMatchInLessThanTime` achievements — 18 checks for a typical character,
+`CompleteMatchInLessThanTime` achievements - 18 checks for a typical character,
 36 for two. Names are case-insensitive and validated at generation time; a typo
 fails loudly with the full list of valid names.
 
 `max_prestige` caps the per-character prestige ladder. Prestige achievements ask
 for tiers 5, 10, 20, 30, 40, 50, 60, 70, 100 and 150, so `100` drops the 23
 150-tier checks, `70` also drops the 100 tier (45 checks total) and `0` removes
-the whole ladder — 209 checks, including the prestige-50-on-multiple-characters
+the whole ladder - 209 checks, including the prestige-50-on-multiple-characters
 one, which goes away at any cap below 50.
 
 `hidden_achievements: false` removes the 11 flags marked hidden in the catalog
 (`UnlockBlacksmith`, the Valentine Altar / Cave Elemental / Sasquach curse-tier
 ones, `CompleteCrusadeTier5` and friends).
 
-Global counters are deliberately left alone — `UnlockCharacterCount22`,
-`CompleteSkillTreeCount22`, `ReachTotalEnemiesKilled*`, the mastery tiers — they
+Global counters are deliberately left alone - `UnlockCharacterCount22`,
+`CompleteSkillTreeCount22`, `ReachTotalEnemiesKilled*`, the mastery tiers - they
 track in-game progress across every character, so disabling one character's
 checks does not make them unreachable. Character and weapon **items** are also
 unchanged: a disabled character still arrives as an unlock, it just no longer
@@ -525,7 +525,7 @@ exist"), then falls back to `PATH`.
 
 BepInEx 6 (IL2CPP, bleeding-edge) is installed in the game folder; the plugin
 lives in `BepInEx/plugins/SoulstoneAP.dll`. The plugin writes
-`BepInEx/config/soulstone.ap.bridge.cfg` — change `Port` or `AllowedProfileIndex`
+`BepInEx/config/soulstone.ap.bridge.cfg` - change `Port` or `AllowedProfileIndex`
 there if needed.
 
 ## Playing
@@ -558,17 +558,17 @@ The client logs to `client.log` (and `.tools/archipelago/logs/SoulstoneClient_*.
 
 **The game always asks for a save slot at startup.** Until you pick slot 1 the
 plugin reports `no save slot selected yet`, and the client answers
-`Holding '<item>' until the game is ready`. That is expected, not a failure —
+`Holding '<item>' until the game is ready`. That is expected, not a failure -
 it applies the moment the slot loads.
 
 ## Design
 
-* **Items** — `Character: <Name>` (22 progression unlocks), `Weapon: <id>` (88
+* **Items** - `Character: <Name>` (22 progression unlocks), `Weapon: <id>` (88
   weapons that are not auto-unlocked), 6 `Trap: ...` items, and
   `Soulstones +100` (filler currency).
-* **Locations** — `Clear <map>` (5 standard maps) and `Achievement: <id>`
+* **Locations** - `Clear <map>` (5 standard maps) and `Achievement: <id>`
   (483 achievements) = 488 checks.
-* **Goal** — clear every standard map in normal mode.
+* **Goal** - clear every standard map in normal mode.
 
 Logic is deliberately flat: in-game progression (clear a map to open the next)
 still applies, but every check is considered reachable. The randomization comes
@@ -640,12 +640,12 @@ That delay is deliberate, not a shortcut. Two more direct approaches were tried
 and both **crashed the game** (native crash, not a managed exception):
 `BossSpawnProcessor.SpawnBosses` called from outside the run's own flow, and
 instantiating a live enemy with `Object.Instantiate` to place copies near the
-player — entities created outside the game's pooling are not safe. Until a
+player - entities created outside the game's pooling are not safe. Until a
 pooled spawn entry point is found, the counters are the only safe path.
 
 `Trap: Void Hunters` was dropped: `GameManagerVoidHunterComponent` only exists in
 runs where a void-hunter affix is active, so in a normal run there is nothing to
-call. Regenerate seeds after changing the trap list — item ids shift.
+call. Regenerate seeds after changing the trap list - item ids shift.
 
 ### Forcing effects for testing
 
@@ -671,32 +671,32 @@ python tools/force.py knockbacklink localhost:38281 LinkTester
 
 `effect` needs a run in progress and the current plugin build (the command is
 `EFFECT name=<trap>` on the bridge, so `python tools/bridge_test.py "EFFECT name=Swarm"`
-does the same thing). It applies the effect **locally only** — it does not send a
+does the same thing). It applies the effect **locally only** - it does not send a
 DeathLink to other players.
 
 The `deathlink` / `knockbacklink` forms join the room as a second slot and bounce,
 because Archipelago ignores bounces from players who are not in the seed. Use a
-spare slot (`LinkTester` in a test seed), never your live one — connecting twice
+spare slot (`LinkTester` in a test seed), never your live one - connecting twice
 as the same slot kicks the game off.
 
 ## Customizing checks and items
 
-Most of this is now exposed as YAML options (see *Sharing the world* above) —
+Most of this is now exposed as YAML options (see *Sharing the world* above) -
 use those unless you are changing the structure itself. Everything is derived
 from `catalog.json` by [`data.py`](world/soulstone_survivors/data.py), so you can
 change what counts as a check without touching game data:
 
-* **Drop achievements from the check list** — in `data.py` replace the
+* **Drop achievements from the check list** - in `data.py` replace the
   `ACHIEVEMENTS` comprehension with a filter such as
   `if entry.get("id", "").startswith("CompleteAffixTier")`, or set
   `ACHIEVEMENTS = []` to make the seed maps-only.
-* **Pick which maps count** — the `MAPS` filter skips unavailable/ignored/crusade
+* **Pick which maps count** - the `MAPS` filter skips unavailable/ignored/crusade
   maps; add a biome or name filter there.
-* **Change item categories** — [`Items.py`](world/soulstone_survivors/Items.py):
+* **Change item categories** - [`Items.py`](world/soulstone_survivors/Items.py):
   `CHARACTER_PREFIX`/`WEAPON_PREFIX` build names, `item_classifications` sets
   progression vs useful, and `data.FILLER_NAME` / `FILLER_AMOUNT` control the
   filler currency (raise `FILLER_AMOUNT` for bigger payouts).
-* **Change the goal** — [`__init__.py`](world/soulstone_survivors/__init__.py):
+* **Change the goal** - [`__init__.py`](world/soulstone_survivors/__init__.py):
   `MAP_LOCATIONS` in `set_rules` is the victory condition; swap it for an
   achievement subset if you prefer.
 
@@ -706,7 +706,7 @@ as long as `catalog.json` is unchanged, so existing seeds keep working.
 ## Known limitations
 
 * **Unlocks are additive, by design.** The game never re-locks what you own, and
-  the mod never removes anything, so anything you buy in the shop stays yours —
+  the mod never removes anything, so anything you buy in the shop stays yours -
   the item pool just controls what you get *for free from the multiworld*.
 * Character/weapon unlocks appear in the menu after the game reloads the profile
   (leaving to the main menu is enough); the game writes them to disk at its normal
@@ -720,8 +720,8 @@ as long as `catalog.json` is unchanged, so existing seeds keep working.
 
 ## Troubleshooting
 
-* `python tools/bridge_test.py PING` — verifies the plugin answered.
-* `python tools/bridge_test.py STATE` — dumps the live save as the client sees it.
+* `python tools/bridge_test.py PING` - verifies the plugin answered.
+* `python tools/bridge_test.py STATE` - dumps the live save as the client sees it.
 * `bridge_test.py` prints `ERR profile N is active but only profile 1 may be used`
   if you loaded the wrong save slot, and
   `ERR no save slot selected yet - pick save slot 1 in game` while the game is
