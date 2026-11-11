@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SoulstoneAP
 {
@@ -10,6 +11,7 @@ namespace SoulstoneAP
         public string NodeId;      // the skill tree item id
         public int IdHash;         // what the save stores
         public string Character;   // owner, or empty for the shared tree
+        public Sprite Icon;        // the game's rune artwork, null if unavailable
     }
 
     /// <summary>
@@ -21,6 +23,8 @@ namespace SoulstoneAP
     internal static class RuneNodes
     {
         private static List<RuneNode> _all;
+        private static Dictionary<int, RuneNode> _byHash;
+        private static Dictionary<string, RuneNode> _byRuneId;
         private static bool _failed;
 
         public static List<RuneNode> All()
@@ -35,7 +39,8 @@ namespace SoulstoneAP
                 if (bundle == null)
                 {
                     _failed = true;
-                    return found;
+                    _all = found;
+                    return _all;
                 }
 
                 foreach (var node in bundle._skillTreeUnlockRuneNodes)
@@ -55,6 +60,7 @@ namespace SoulstoneAP
                         NodeId = node.Id ?? "",
                         IdHash = node.IdHash,
                         Character = node.CharactersType.ToString(),
+                        Icon = SafeIcon(rune),
                     });
                 }
 
@@ -67,7 +73,20 @@ namespace SoulstoneAP
             }
 
             _all = found;
+            _byHash = new Dictionary<int, RuneNode>(_all.Count);
+            _byRuneId = new Dictionary<string, RuneNode>(_all.Count, StringComparer.OrdinalIgnoreCase);
+            foreach (var node in _all)
+            {
+                if (!_byHash.ContainsKey(node.IdHash)) _byHash.Add(node.IdHash, node);
+                _byRuneId[node.RuneId] = node;
+            }
             return _all;
+        }
+
+        private static Sprite SafeIcon(SkillTreeUnlockRuneSO rune)
+        {
+            try { return rune.GetSkillIcon(); }
+            catch { return null; }
         }
 
         /// <summary>The node that unlocks a rune, resolved through the game's own lookup.</summary>
@@ -86,6 +105,21 @@ namespace SoulstoneAP
                 Plugin.Logger?.LogWarning("RuneNodes: lookup failed for '" + runeId + "': " + error.Message);
                 return null;
             }
+        }
+
+        /// <summary>The rune a skill tree node unlocks, matched by the save hash.</summary>
+        public static RuneNode ForHash(int hash)
+        {
+            All();
+            return _byHash != null && _byHash.TryGetValue(hash, out var node) ? node : null;
+        }
+
+        /// <summary>The rune with this id, indexed once when the tree is read.</summary>
+        public static RuneNode ForRuneId(string runeId)
+        {
+            if (string.IsNullOrEmpty(runeId)) return null;
+            All();
+            return _byRuneId != null && _byRuneId.TryGetValue(runeId, out var node) ? node : null;
         }
 
         /// <summary>Rune ids the profile has already unlocked, read off the skill tree.</summary>

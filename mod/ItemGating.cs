@@ -280,8 +280,10 @@ namespace SoulstoneAP
         {
             if (Granting || __instance == null) return true;
 
+            // The ceiling must not short-circuit the ownership check: a seed with
+            // Unlimited still has to know whether these weapons are items or
+            // licence-gated.
             var cap = Plugin.GrantedWeaponCap?.Value ?? 1;
-            if (cap < 0) return true;
             if (!OnAllowedProfile()) return true;
 
             string weaponId;
@@ -300,13 +302,17 @@ namespace SoulstoneAP
             var profile = Global.PlayerProfile;
             if (profile == null || profile.WeaponsLevel == null) return true;
 
-            // Crafting a weapon the save does not own *is* the self-unlock. In a
-            // seed where weapons are items, that has to come from another player.
-            if (GameState.WeaponsFromItems && !OwnsWeapon(profile, weaponId))
+            // Crafting an unowned weapon is a self-unlock in both modes: with
+            // weapons as items it needs the item, with licences it needs the
+            // character's licence. A seed with neither leaves vanilla alone.
+            if (!OwnsWeapon(profile, weaponId) && !GameState.CanCraft(weaponId) &&
+                (GameState.WeaponsFromItems || GameState.CraftLicences))
             {
-                Note($"blacksmith crafting '{weaponId}' before its item arrived");
+                Note($"blacksmith crafting '{weaponId}' without its item or licence");
                 return false;
             }
+
+            if (cap < 0) return true;
 
             int current;
             try

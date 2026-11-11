@@ -28,6 +28,19 @@ for _weapon in data.WEAPONS:
     item_classifications[_name] = ItemClassification.useful
     _next_id += 1
 
+# Crafting licences: when weapons are items, the blacksmith only crafts a
+# character's weapons once this item has arrived. One per character that owns
+# weapons, so the craft-them-all achievements stay reachable without waiting on
+# every single weapon item.
+CRAFT_PREFIX = "Craft: "
+CRAFT_ITEMS = []
+for _character in data.WEAPON_CHARACTERS:
+    _name = CRAFT_PREFIX + _character
+    item_name_to_id[_name] = _next_id
+    item_classifications[_name] = ItemClassification.progression
+    CRAFT_ITEMS.append(_name)
+    _next_id += 1
+
 item_name_to_id[data.FILLER_NAME] = _next_id
 item_classifications[data.FILLER_NAME] = ItemClassification.filler
 _next_id += 1
@@ -52,7 +65,9 @@ for _trap in TRAP_NAMES:
 TRAP_ITEMS = [TRAP_PREFIX + trap for trap in TRAP_NAMES]
 
 # Runes are skill tree nodes: receiving one unlocks it outright, prerequisites
-# and tier requirements ignored. They gate no checks, so they stay useful.
+# and tier requirements ignored. They are items only in new seeds (no matching
+# location), so a received rune cannot complete a check and chain an item to a
+# third player. They gate no other check, so they stay useful.
 RUNE_PREFIX = "Rune: "
 
 for _rune in data.RUNES:
@@ -104,6 +119,9 @@ for _tier, _required in data.AFFIX_TIERS:
     _next_id += 1
 
 CURSE_TIER_ITEMS = list(CURSE_TIER_ITEM_VALUES)
+CURSE_TIER_ITEM_BY_NUMBER = {
+    int(_value): _name for _name, _value in CURSE_TIER_ITEM_VALUES.items()
+}
 
 # Weapon upgrade caps. The blacksmith has no ceiling of its own, so the mod
 # blocks levels above the highest cap that has arrived. Level 1 is the base, so
@@ -133,22 +151,54 @@ item_name_to_id[RESOURCE_CACHE_NAME] = _next_id
 item_classifications[RESOURCE_CACHE_NAME] = ItemClassification.useful
 _next_id += 1
 
+# Varied filler. These names are appended after every item that existed before
+# this feature, so old seeds keep their original ids. The multipliers average
+# out to 1.0, which keeps the total filler value close to the old single stack.
+FILLER_VARIANTS = {
+    "Soulstone Shard": 0.5,
+    "Soulstone Cluster": 0.75,
+    "Soulstone Cache": 1.25,
+    "Soulstone Hoard": 1.5,
+}
+for _name in FILLER_VARIANTS:
+    item_name_to_id[_name] = _next_id
+    item_classifications[_name] = ItemClassification.filler
+    _next_id += 1
+
 MODE_ITEMS = list(MODE_ITEM_VALUES)
 
 # Which endgame check family needs which mode item.
 MODE_ITEM_FOR_KIND = {"ritual": "Unholy Cathedral", "titan": "Titan Hunt"}
 
 FILLER_NAME = data.FILLER_NAME
+FILLER_VARIETY_ITEMS = list(FILLER_VARIANTS)
+
+
+def filler_amounts(base: int) -> dict[str, int]:
+    """Return the Soulstone value of each filler name for a base amount.
+
+    Values are rounded to five so the feed stays readable. The four variant
+    multipliers sum to 4.0, so an even mix stays close to four times the base.
+    """
+    base = max(5, int(base))
+    amounts = {FILLER_NAME: base}
+    for name, multiplier in FILLER_VARIANTS.items():
+        amounts[name] = max(5, int(round(base * multiplier / 5.0)) * 5)
+    return amounts
+
 
 # Every non-filler item that goes into the pool.
 PROGRESSION_ITEMS = [CHARACTER_PREFIX + c for c in data.CHARACTERS]
-USEFUL_ITEMS = [WEAPON_PREFIX + w for w in data.WEAPONS] + RUNE_ITEMS
+WEAPON_ITEMS = [WEAPON_PREFIX + w for w in data.WEAPONS]
+USEFUL_ITEMS = WEAPON_ITEMS + RUNE_ITEMS
 POOL_ITEMS = (
     PROGRESSION_ITEMS
     + MODE_ITEMS
     + MAP_ITEMS
     + CURSE_TIER_ITEMS
     + WEAPON_CAP_ITEMS
-    + USEFUL_ITEMS
+    + WEAPON_ITEMS
+    + RUNE_ITEMS
+    + CRAFT_ITEMS
     + TRAP_ITEMS
 )

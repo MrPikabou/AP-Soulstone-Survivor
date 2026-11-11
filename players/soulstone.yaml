@@ -1,4 +1,5 @@
 name: Survivor
 game: Soulstone Survivors
 description: Soulstone Survivors test slot
-Soulstone Survivors: {}
+Soulstone Survivors:
+  starting_character: barbarian

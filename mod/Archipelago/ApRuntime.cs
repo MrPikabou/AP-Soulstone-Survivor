@@ -19,8 +19,14 @@ namespace SoulstoneAP
 
         private readonly ApSession _session = new ApSession();
         private readonly HashSet<int> _sentChecks = new HashSet<int>();
+        private readonly HashSet<int> _checkedLocations = new HashSet<int>();
+        private readonly HashSet<string> _receivedItems = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, int> _mapLocations = new Dictionary<string, int>();
         private readonly Dictionary<string, int> _achievementLocations = new Dictionary<string, int>();
+        private readonly List<string> _goalMaps = new List<string>();
+        private readonly List<int> _goalLocations = new List<int>();
+        private string _goalLabel = "maps";
+        private string _serverLabel = "";
         private readonly Dictionary<int, string> _itemCommands = new Dictionary<int, string>();
         // Maps this slot actually received. With map_unlocks on, a `Clear <map>`
         // check is only reported once its map item arrived, so unlocking a map by
@@ -36,14 +42,53 @@ namespace SoulstoneAP
 
         private readonly List<PendingGrant> _pendingGrants = new List<PendingGrant>();
 
-        // What has arrived this session, newest last, for the panel's received list.
-        private const int MaxReceivedLines = 5;
-        private readonly List<string> _received = new List<string>();
+        // Everything the panel shows, oldest first: own checks, own items and
+        // other players' finds. Bounded so a long session cannot grow forever.
+        private const int MaxLogLines = 200;
+        private sealed class EventLine
+        {
+            public string Text;
+            public string Class;
+        }
+
+        private readonly List<EventLine> _events = new List<EventLine>();
         private readonly Dictionary<int, string> _playerNames = new Dictionary<int, string>();
         private int _ourSlot = -1;
 
-        /// <summary>The last few received items, one per line, as shown in the panel.</summary>
-        public string ReceivedSummary => _received.Count == 0 ? "" : string.Join("\n", _received);
+        /// <summary>The whole log, one entry per line, oldest first.</summary>
+        /// <summary>One recent item or check for the top-left HUD.</summary>
+        public sealed class FeedEntry
+        {
+            public string Text;
+            public string Kind;
+            public string Key;
+            public string Class;
+            public float Time;
+        }
+
+        private readonly List<FeedEntry> _feed = new List<FeedEntry>();
+
+        /// <summary>Newest last; the HUD reads this directly.</summary>
+        public List<FeedEntry> Feed => _feed;
+
+        public string EventLog
+        {
+            get
+            {
+                if (_events.Count == 0) return "";
+                var text = new StringBuilder();
+                for (var i = 0; i < _events.Count; i++)
+                {
+                    if (i > 0) text.Append((char)10);
+                    text.Append("<color=#").Append(ColorOf(_events[i].Class)).Append('>')
+                        .Append(_events[i].Text).Append("</color>");
+                }
+                return text.ToString();
+            }
+        }
+
+        /// <summary>Bumped for every new line, so the panel knows when to repaint.</summary>
+        public int EventLogVersion { get; private set; }
 
         private bool _joined;
         private bool _autoConnectTried;
@@ -61,14 +106,50 @@ namespace SoulstoneAP
         private float _nextLinkPoll;
         private string _effectNotice = "";
         private float _effectNoticeUntil;
+        private AudioSource _audio;
+        private AudioClip _goodTone;
+        private AudioClip _badTone;
+        private bool _soundWarned;
+        private float _nextChime;
 
         public static ApRuntime Instance => _instance;
-        public string Status => _joined
-            ? "In game (v" + Plugin.Version + "): " + _joinStatus +
-              (Time.unscaledTime < _effectNoticeUntil ? " | " + _effectNotice : "")
-            : _session.Status;
+        public string Status => _session.RetrySeconds > 0
+            ? _session.Status
+            : _joined
+                ? "In game (v" + Plugin.Version + "): " + _joinStatus +
+                  (Time.unscaledTime < _effectNoticeUntil ? " | " + _effectNotice : "")
+                : _session.Status;
         public bool IsRunning => _session.IsRunning;
         public bool IsJoined => _joined;
+        public string ServerLabel => _serverLabel;
+        public int RetrySeconds => _session.RetrySeconds;
+
+        /// <summary>off / connecting / joining / joined / retrying, for the status HUD.</summary>
+        public string Phase
+        {
+            get
+            {
+                if (!_session.IsRunning) return "off";
+                if (_session.RetrySeconds > 0) return "retrying";
+                if (!_session.Connected) return "connecting";
+                return _joined ? "joined" : "joining";
+            }
+        }
+
+        public int GoalTotal => _goalLocations.Count;
+
+        public string GoalLabel => _goalLabel;
+
+        public int GoalCleared
+        {
+            get
+            {
+                var cleared = 0;
+                foreach (var id in _goalLocations)
+                    if (IsChecked(id)) cleared++;
+                return cleared;
+            }
+        }
 
         private void Awake()
         {
@@ -79,6 +160,10 @@ namespace SoulstoneAP
         {
             _sentChecks.Clear();
             _slotName = slot;
+            _serverLabel = host + ":" + port;
+            _goalMaps.Clear();
+            _goalLocations.Clear();
+            _goalLabel = "maps";
             _wasDead = false;
             _lastHealth = -1f;
             _joined = false;
@@ -89,11 +174,32 @@ namespace SoulstoneAP
             _session.Start(host, port, slot, password);
         }
 
+        /// <summary>Sends a chat command such as `!hint`; replies arrive as Print / PrintJSON.</summary>
+        public void SendChat(string command)
+        {
+            command = (command ?? "").Trim();
+            if (command.Length == 0) return;
+            if (!_joined || !_session.IsRunning || !_session.Connected)
+            {
+                NoteEvent("Not connected - chat command not sent.", "chat");
+                return;
+            }
+            var payload = new Json().StartObject()
+                .Name("cmd").Value("Say")
+                .Name("text").Value(command)
+                .EndObject().ToString();
+            _session.Send("[" + payload + "]");
+            NoteEvent("> " + command, "chat");
+        }
+
         public void Disconnect()
         {
             _session.Stop();
             _joined = false;
             _joinStatus = "";
+            _goalMaps.Clear();
+            _goalLocations.Clear();
+            _goalLabel = "maps";
         }
 
         private void Update()
@@ -245,7 +351,17 @@ namespace SoulstoneAP
                     break;
 
                 case "Bounce":
+                case "Bounced":   // what the server forwards a Bounce as
                     OnBounce(message);
+                    break;
+
+                case "PrintJSON":
+                    OnPrintJson(message);
+                    break;
+
+                case "Print":
+                case "ChatPrint":
+                    NoteChat(JsonParser.GetString(message, "text", ""));
                     break;
 
                 case "ConnectionRefused":
@@ -261,6 +377,61 @@ namespace SoulstoneAP
             if (message.TryGetValue("errors", out var errors) && JsonParser.AsArray(errors) is { } list && list.Count > 0)
                 return JsonParser.AsString(list[0]) ?? "unknown";
             return "unknown";
+        }
+
+        /// <summary>
+        /// Server broadcasts. ItemSend fires for every check anyone completes, so
+        /// this is how other players' finds reach the panel; our own checks are
+        /// logged where they are sent, where the location name is known.
+        /// </summary>
+        private void OnPrintJson(Dictionary<string, object> message)
+        {
+            var type = JsonParser.GetString(message, "type", "");
+
+            if (type == "Chat")
+            {
+                var chat = JoinData(message);
+                if (!string.IsNullOrEmpty(chat)) NoteChat(chat);
+                return;
+            }
+
+            if (type == "Hint")
+            {
+                var hint = HintText(message);
+                if (!string.IsNullOrEmpty(hint)) NoteChat(hint);
+                return;
+            }
+
+            if (type == "ItemSend")
+            {
+                var item = message.TryGetValue("item", out var raw) ? JsonParser.AsObject(raw) : null;
+                if (item == null) return;
+
+                var sender = JsonParser.GetInt(item, "player", -1);
+                var receiving = JsonParser.GetInt(message, "receiving", -1);
+
+                // Our own finds are logged by ReportChecks, and items for us arrive
+                // as ReceivedItems. Only other-to-other sends are news here.
+                if (sender == _ourSlot || receiving == _ourSlot) return;
+
+                var found = PlayerName(sender) + " found " + JsonParser.GetString(item, "name", "an item") +
+                            " for " + PlayerName(receiving);
+                var category = ClassOfFlags(item);
+                NoteEvent(found, category);
+                NoteFeed(found, "Other", "", category, true);
+                return;
+            }
+
+            if (type == "Goal")
+            {
+                var slot = JsonParser.GetInt(message, "slot", -1);
+                if (slot >= 0 && slot != _ourSlot)
+                {
+                    var goal = PlayerName(slot) + " completed their goal";
+                    NoteEvent(goal, "goal");
+                    NoteFeed(goal, "Goal", "", "goal");
+                }
+            }
         }
 
         private void SendConnect()
@@ -294,10 +465,23 @@ namespace SoulstoneAP
         {
             _joined = true;
             _sentChecks.Clear();
+            _checkedLocations.Clear();
+            _receivedItems.Clear();
+
+            if (message.TryGetValue("checked_locations", out var checkedRaw) &&
+                JsonParser.AsArray(checkedRaw) is { } checkedList)
+            {
+                foreach (var value in checkedList)
+                {
+                    var checkedId = JsonParser.AsInt(value, -1);
+                    if (checkedId >= 0) _checkedLocations.Add(checkedId);
+                }
+            }
 
             var slot = JsonParser.GetInt(message, "slot", -1);
             _ourSlot = slot;
-            _received.Clear();
+            _events.Clear();
+            EventLogVersion++;
             ReadPlayerNames(message);
 
             var players = message.TryGetValue("slot_info", out var info)
@@ -338,17 +522,206 @@ namespace SoulstoneAP
             }
         }
 
-        /// <summary>Remembers one received item for the panel, with who sent it.</summary>
-        private void NoteReceived(string command, Dictionary<string, object> item)
+        /// <summary>Adds one line to the panel log, dropping the oldest past the cap.</summary>
+        private void NoteEvent(string line, string cls = "")
         {
-            var sender = JsonParser.GetInt(item, "player", -1);
-            string from;
-            if (sender >= 0 && sender == _ourSlot) from = "you";
-            else if (sender >= 0 && _playerNames.TryGetValue(sender, out var name) && !string.IsNullOrEmpty(name)) from = name;
-            else from = "another world";
+            if (string.IsNullOrEmpty(line)) return;
+            _events.Add(new EventLine { Text = line, Class = cls ?? "" });
+            while (_events.Count > MaxLogLines) _events.RemoveAt(0);
+            EventLogVersion++;
+        }
 
-            _received.Add(Describe(command) + "  <- " + from);
-            while (_received.Count > MaxReceivedLines) _received.RemoveAt(0);
+        /// <summary>Adds one line to the top-left feed, keeping only the newest entries.</summary>
+        private void NoteFeed(string text, string kind, string key, string cls = "", bool silent = false)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            var category = string.IsNullOrEmpty(cls) ? ClassOf(kind) : cls;
+            _feed.Add(new FeedEntry { Text = text, Kind = kind ?? "", Key = key ?? "", Class = category, Time = Time.unscaledTime });
+            while (_feed.Count > 24) _feed.RemoveAt(0);
+            if (!silent && (category == "progression" || category == "trap")) Chime(category == "trap");
+        }
+
+        /// <summary>Chat and command replies; also mirrored to the BepInEx console.</summary>
+        private void NoteChat(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            foreach (var raw in text.Split((char)10))
+            {
+                var line = raw.TrimEnd();
+                if (line.Length == 0) continue;
+                NoteEvent(line, "chat");
+                Plugin.Logger?.LogInfo("AP chat: " + line);
+            }
+        }
+
+        private static string JoinData(Dictionary<string, object> message)
+        {
+            var text = JsonParser.GetString(message, "text", "");
+            if (!string.IsNullOrEmpty(text)) return text;
+            if (!message.TryGetValue("data", out var raw) || JsonParser.AsArray(raw) is not { } data) return "";
+            var joined = new StringBuilder();
+            foreach (var part in data)
+            {
+                var entry = JsonParser.AsObject(part);
+                var line = entry != null ? JsonParser.GetString(entry, "text", "") : JsonParser.AsString(part) ?? "";
+                if (string.IsNullOrEmpty(line)) continue;
+                if (joined.Length > 0) joined.Append((char)10);
+                joined.Append(line);
+            }
+            return joined.ToString();
+        }
+
+        private string HintText(Dictionary<string, object> message)
+        {
+            var item = message.TryGetValue("item", out var itemRaw) ? JsonParser.AsObject(itemRaw) : null;
+            if (item == null) return JoinData(message);
+            var location = message.TryGetValue("location", out var locationRaw) ? JsonParser.AsObject(locationRaw) : null;
+            var itemName = JsonParser.GetString(item, "name", "an item");
+            var itemPlayer = JsonParser.GetInt(item, "player", -1);
+            var locationName = location != null ? JsonParser.GetString(location, "name", "a location") : "a location";
+            var locationPlayer = location != null ? JsonParser.GetInt(location, "player", -1) : -1;
+            var text = "Hint: " + itemName + " for " + PlayerName(itemPlayer) + " at " + locationName;
+            if (locationPlayer >= 0 && locationPlayer != itemPlayer)
+                text += " (" + PlayerName(locationPlayer) + "'s world)";
+            return text + (JsonParser.GetBool(message, "found") ? " - already found" : "");
+        }
+
+        private static string ClassOfFlags(Dictionary<string, object> item)
+        {
+            if (item == null) return "";
+            var flags = JsonParser.GetInt(item, "flags", 0);
+            if ((flags & 4) != 0) return "trap";
+            if ((flags & 1) != 0) return "progression";
+            if ((flags & 2) != 0) return "useful";
+            return flags != 0 ? "filler" : "";
+        }
+
+        private static string ClassOf(string kind)
+        {
+            switch ((kind ?? "").ToLowerInvariant())
+            {
+                case "char":
+                case "map":
+                case "craft":
+                case "curse":
+                case "cursetier":
+                case "weaponcap":
+                case "mode":
+                    return "progression";
+                case "rune":
+                case "weapon":
+                case "resource":
+                    return "useful";
+                case "souls":
+                    return "filler";
+                case "trap":
+                    return "trap";
+                case "check":
+                    return "check";
+                case "goal":
+                    return "goal";
+                default:
+                    return "";
+            }
+        }
+
+        private static string ColorOf(string category)
+        {
+            switch (category ?? "")
+            {
+                case "progression": return "FFC857";
+                case "useful": return "6FB3FF";
+                case "filler": return "9AA3B2";
+                case "trap": return "FF6B6B";
+                case "check": return "7BE0A3";
+                case "goal": return "FFD166";
+                case "chat": return "C9B6FF";
+                default: return "E8EDF5";
+            }
+        }
+
+        private void Chime(bool trap)
+        {
+            if (Plugin.FeedSounds == null || !Plugin.FeedSounds.Value) return;
+            if (Time.unscaledTime < _nextChime) return;
+            _nextChime = Time.unscaledTime + 0.4f;
+            try
+            {
+                if (_audio == null)
+                {
+                    _audio = gameObject.AddComponent<AudioSource>();
+                    _audio.playOnAwake = false;
+                    _audio.spatialBlend = 0f;
+                    _audio.volume = 0.35f;
+                }
+                if (trap)
+                {
+                    if (_badTone == null) _badTone = Tone(196f, 0.22f);
+                    _audio.PlayOneShot(_badTone, 0.7f);
+                }
+                else
+                {
+                    if (_goodTone == null) _goodTone = Tone(659f, 0.14f);
+                    _audio.PlayOneShot(_goodTone, 0.55f);
+                }
+            }
+            catch (Exception error)
+            {
+                if (_soundWarned) return;
+                _soundWarned = true;
+                Log?.LogWarning("AP: feed sound unavailable: " + error.Message);
+            }
+        }
+
+        private static AudioClip Tone(float hz, float seconds)
+        {
+            const int rate = 44100;
+            var count = Mathf.Max(1, Mathf.CeilToInt(rate * seconds));
+            var samples = new float[count];
+            for (var i = 0; i < count; i++)
+            {
+                var t = i / (float)rate;
+                var fade = Mathf.Min(1f, t * 60f) * Mathf.Min(1f, (seconds - t) * 30f);
+                samples[i] = Mathf.Sin(2f * Mathf.PI * hz * t) * 0.5f * fade;
+            }
+            var clip = AudioClip.Create("ap_tone", count, 1, rate, false);
+            clip.SetData(samples, 0);
+            return clip;
+        }
+
+        /// <summary>The server's checked set plus whatever this session has sent.</summary>
+        public bool IsChecked(int id) => _sentChecks.Contains(id) || _checkedLocations.Contains(id);
+
+        /// <summary>Has an item with this exact name arrived this session?</summary>
+        public bool HasReceivedItem(string name) => !string.IsNullOrEmpty(name) && _receivedItems.Contains(name);
+
+        /// <summary>Bumped whenever a check is sent, so the browser can repaint.</summary>
+        public int ProgressVersion { get; private set; }
+
+        /// <summary>Slot number to something worth printing.</summary>
+        private string PlayerName(int slot)
+        {
+            if (slot < 0) return "another world";
+            if (slot == _ourSlot) return "you";
+            return _playerNames.TryGetValue(slot, out var name) && !string.IsNullOrEmpty(name)
+                ? name
+                : "player " + slot;
+        }
+
+        /// <summary>Remembers one received item for the panel, with who sent it.</summary>
+        private void NoteReceived(string command, Dictionary<string, object> item, bool silent = false)
+        {
+            var name = JsonParser.GetString(item, "name", "");
+            if (!string.IsNullOrEmpty(name)) _receivedItems.Add(name);
+            ProgressVersion++;
+            var from = PlayerName(JsonParser.GetInt(item, "player", -1));
+            var line = "You received " + Describe(command) + (from == "you" ? "" : " (from " + from + ")");
+            var colon = command.IndexOf(':');
+            var kind = colon > 0 ? command.Substring(0, colon) : command;
+            var category = ClassOfFlags(item);
+            if (string.IsNullOrEmpty(category)) category = ClassOf(kind);
+            NoteEvent(line, category);
+            NoteFeed(line, kind, colon > 0 ? command.Substring(colon + 1) : "", category, silent);
         }
 
         /// <summary>Item command (`Weapon:WeaponBarbarian-02`) to something a player recognises.</summary>
@@ -385,6 +758,8 @@ namespace SoulstoneAP
                 }
                 case "Resource":
                     return "Resource Cache";
+                case "Craft":
+                    return "Crafting licence: " + Spaced(value);
                 case "Trap":
                     return "Trap: " + value;
                 default:
@@ -397,16 +772,22 @@ namespace SoulstoneAP
             return value != null && value.StartsWith(prefix, StringComparison.Ordinal) ? value.Substring(prefix.Length) : value;
         }
 
-        /// <summary>Camel-case ids to words: `GuaranteedMinimumRarity` -> `Guaranteed Minimum Rarity`.</summary>
-        private static string Spaced(string text)
+        /// <summary>Camel-case ids to words, digits split off: `Killed10000` -> `Killed 10000`.</summary>
+        internal static string Spaced(string text)
         {
             if (string.IsNullOrEmpty(text)) return text ?? "";
             var builder = new StringBuilder(text.Length + 8);
             for (var i = 0; i < text.Length; i++)
             {
                 var character = text[i];
-                if (i > 0 && char.IsUpper(character) && !char.IsUpper(text[i - 1]) && text[i - 1] != ' ')
-                    builder.Append(' ');
+                if (i > 0)
+                {
+                    var previous = text[i - 1];
+                    if (char.IsUpper(character) && !char.IsUpper(previous) && previous != ' ' && !char.IsDigit(previous))
+                        builder.Append(' ');
+                    else if (char.IsDigit(character) && !char.IsDigit(previous) && previous != ' ')
+                        builder.Append(' ');
+                }
                 builder.Append(character);
             }
             return builder.ToString();
@@ -421,6 +802,7 @@ namespace SoulstoneAP
             var previous = Plugin.AppliedItems.Value;
             Plugin.AppliedSeed.Value = identity;
             Plugin.AppliedItems.Value = 0;
+            GameState.ResetLicences();
             Plugin.Instance?.Config.Save();
             Log?.LogInfo($"AP: new seed '{identity}' - replaying all {previous} previously counted item(s)");
         }
@@ -433,7 +815,11 @@ namespace SoulstoneAP
             _grantedMaps.Clear();
             GameState.GrantedMaps.Clear();
             _mapsAreDefault = false;
+            _goalMaps.Clear();
+            _goalLocations.Clear();
+            _goalLabel = "maps";
             _deathLinkEnabled = false;
+            GameState.CraftLicences = false;
             _knockbackLinkEnabled = false;
 
             var sawWeaponItem = false;
@@ -460,6 +846,7 @@ namespace SoulstoneAP
                             sawMapItem = true;
                             break;
                         case "souls": _itemCommands[id] = "Souls:" + value; break;
+                        case "craft": _itemCommands[id] = "Craft:" + value; break;
                         case "trap": _itemCommands[id] = "Trap:" + value; break;
                         case "resource": _itemCommands[id] = "Resource:" + value; break;
                     }
@@ -476,6 +863,36 @@ namespace SoulstoneAP
                 }
 
                 _mapsAreDefault = JsonParser.GetBool(slotData, "maps_default");
+
+                if (slotData.TryGetValue("goal_maps", out var goalRaw) && JsonParser.AsArray(goalRaw) is { } goalList)
+                {
+                    foreach (var entry in goalList)
+                    {
+                        var name = JsonParser.AsString(entry);
+                        if (string.IsNullOrEmpty(name)) continue;
+                        if (name.StartsWith("Clear ", StringComparison.Ordinal)) name = name.Substring(6);
+                        _goalMaps.Add(name);
+                    }
+                }
+
+                // New seeds name the goal locations by id, which covers both map
+                // and portal goals. Older seeds fall back to their goal_maps list.
+                if (slotData.TryGetValue("goal_locations", out var goalLocationsRaw) &&
+                    JsonParser.AsArray(goalLocationsRaw) is { } goalLocations)
+                {
+                    foreach (var entry in goalLocations)
+                    {
+                        var id = JsonParser.AsInt(entry);
+                        if (id != 0) _goalLocations.Add(id);
+                    }
+                }
+                else
+                {
+                    foreach (var map in _goalMaps)
+                        if (_mapLocations.TryGetValue(map, out var id)) _goalLocations.Add(id);
+                }
+
+                _goalLabel = JsonParser.GetString(slotData, "goal_label", "maps");
 
                 // map_unlocks off: the seed expects every map to be playable from
                 // the start, so write the missing entries once.
@@ -524,6 +941,8 @@ namespace SoulstoneAP
                 GameState.MapsFromItems = false;
             }
 
+            GameState.CraftLicences = JsonParser.GetBool(slotData, "craft_licences");
+            LocationBook.Load(slotData);
             _deathLinkEnabled = JsonParser.GetBool(slotData, "death_link");
             _knockbackLinkEnabled = JsonParser.GetBool(slotData, "knockback_link");
 
@@ -553,7 +972,7 @@ namespace SoulstoneAP
                         _itemCommands.TryGetValue(JsonParser.GetInt(replayedItem, "item", -1), out var replayedCommand))
                     {
                         RememberItem(replayedCommand);
-                        NoteReceived(replayedCommand, replayedItem);
+                        NoteReceived(replayedCommand, replayedItem, true);
                     }
                     continue;
                 }
@@ -746,7 +1165,10 @@ namespace SoulstoneAP
             var snapshot = GameState.Snapshot();
             if (snapshot == null) return;
 
-            var ids = new List<int>();                foreach (var map in snapshot.Maps)
+            var ids = new List<int>();
+            var labels = new List<string>();
+
+            foreach (var map in snapshot.Maps)
                 {
                     if (map.Completeness < 0.999f) continue;
                     if (!_mapsAreDefault && !_grantedMaps.Contains(map.Id))
@@ -757,19 +1179,32 @@ namespace SoulstoneAP
                             Log?.LogInfo($"AP: cleared {map.Id} without its map item - check {selfUnlocked} not sent");
                         continue;
                     }
-                    if (_mapLocations.TryGetValue(map.Id, out var id) && _sentChecks.Add(id)) ids.Add(id);
+                    if (_mapLocations.TryGetValue(map.Id, out var id) && _sentChecks.Add(id))
+                    {
+                        ids.Add(id);
+                        labels.Add("You cleared " + Spaced(map.Id));
+                    }
                 }
 
             foreach (var achievement in snapshot.Achievements)
             {
                 if (!achievement.Done) continue;
-                if (_achievementLocations.TryGetValue(achievement.Id, out var id) && _sentChecks.Add(id)) ids.Add(id);
+                if (_achievementLocations.TryGetValue(achievement.Id, out var id) && _sentChecks.Add(id))
+                {
+                    ids.Add(id);
+                    labels.Add("You completed " +
+                               (LocationBook.NameForId(id) ?? Spaced(achievement.Id)));
+                }
             }
 
-            foreach (var id in EndgameChecks.Evaluate(snapshot))
+            var endgame = 0;
+            foreach (var id in EndgameChecks.Evaluate(snapshot, _sentChecks))
             {
-                if (_sentChecks.Add(id)) ids.Add(id);
+                if (!_sentChecks.Add(id)) continue;
+                ids.Add(id);
+                endgame++;
             }
+            if (endgame > 0) labels.Add("You completed " + endgame + " endgame check(s)");
 
             if (ids.Count == 0) return;
 
@@ -782,6 +1217,12 @@ namespace SoulstoneAP
             json.Append("]}]");
 
             _session.Send(json.ToString());
+            foreach (var label in labels)
+            {
+                NoteEvent(label, "check");
+                NoteFeed(label, "Check", "", "check");
+            }
+            ProgressVersion++;
             Log?.LogInfo($"AP: sent {ids.Count} check(s)");
         }
     }

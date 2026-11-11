@@ -29,8 +29,8 @@ def _read_text():
     return None
 
 # Characters that own achievements in build 1.5d2, including the auto-unlocked
-# (Barbarian) and hidden (Blacksmith) ones. Only used for help text when no
-# catalog is loaded, so the option tooltip never lists an empty set.
+# Barbarian and Blacksmith. Only used for help text when no catalog is loaded,
+# so the option tooltip never lists an empty set.
 KNOWN_ACHIEVEMENT_CHARACTERS = [
     "ArcaneWeaver", "Barbarian", "Beastmaster", "Blacksmith", "Bloodmage",
     "DeathKnight", "DemonHunter", "Elementalist", "Engineer", "HoundMaster",
@@ -39,7 +39,10 @@ KNOWN_ACHIEVEMENT_CHARACTERS = [
     "Shaman", "Spellbreaker",
 ]
 
-# Characters that are unlocked from the start (CharacterDefinition.AutoUnlock).
+# The character the game always unlocks, and the default Archipelago starter.
+DEFAULT_CHARACTER = "Barbarian"
+
+# Character ids used when no catalog is loaded (catalog.json missing).
 FALLBACK_CHARACTERS = [
     "Pyromancer", "HoundMaster", "Spellbreaker", "ArcaneWeaver", "Sentinel",
     "Paladin", "Bloodmage", "Beastmaster", "Rogue", "Elementalist",
@@ -48,8 +51,9 @@ FALLBACK_CHARACTERS = [
     "Blacksmith",
 ]
 
-# The amount is per-seed (Soulstones per Filler option) and travels in slot_data,
-# so the item name stays neutral.
+# Legacy single filler. New seeds with filler_variety use the tiers in Items.py;
+# this name and amount remain for old seeds and when variety is off. The amount
+# travels in slot_data, so the item name stays neutral.
 FILLER_NAME = "Soulstones"
 FILLER_AMOUNT = 100
 
@@ -98,6 +102,12 @@ else:
         for entry in _catalog.get("weapons", [])
         if entry.get("id") and not entry.get("auto") and not entry.get("hidden")
     )
+
+    # Characters that own craftable weapons, in catalog order: one crafting
+    # licence item each when weapons are handed out as items.
+    WEAPON_CHARACTERS = _unique(
+        weapon[len("Weapon"):].split("-")[0] for weapon in WEAPONS
+    )
     MAPS = _unique(
         entry["id"]
         for entry in _catalog.get("maps", [])
@@ -106,8 +116,8 @@ else:
         and not entry.get("ignore")
         and not entry.get("crusade")
     )
-    # Every character id in the build, including auto-unlocked and hidden ones:
-    # achievements exist for characters that are never randomizable.
+    # Every character id in the build, including the auto-unlocked Barbarian:
+    # achievements can exist for characters that are not randomized items.
     CHARACTER_NAMES = _unique(
         entry["id"] for entry in _catalog.get("characters", []) if entry.get("id")
     )
@@ -129,6 +139,62 @@ else:
     )
     ACHIEVEMENTS = _unique(achievement_id for achievement_id, _ in _ACHIEVEMENT_ENTRIES)
     HAS_CATALOG = True
+
+
+# The installed game still calls these `CompleteAffixTierSurvivors<Map><Tier>`.
+# Archipelago shows them as `CompleteCurseLevel<Map><Tier>` so the check name
+# describes the player-facing curse tier rather than the internal affix name.
+# Boss Rush and Endless use the red/purple portal names for the same reason.
+# The game ids stay unchanged because the plugin reports those ids.
+_AFFIX_ACHIEVEMENT_PATTERN = (
+    re.compile(
+        r"^CompleteAffixTier("
+        + "|".join(re.escape(map_id) for map_id in sorted(MAPS, key=len, reverse=True))
+        + r")(\d+)$"
+    )
+    if MAPS
+    else None
+)
+
+
+def map_display_name(map_id):
+    """Short map name used in Archipelago labels."""
+    if map_id.startswith("Survivors"):
+        return map_id[len("Survivors"):]
+    return map_id
+
+
+def affix_achievement_tier(achievement_id):
+    """Affix/curse tier encoded in a map achievement id, or None."""
+    match = _AFFIX_ACHIEVEMENT_PATTERN.match(achievement_id or "") if _AFFIX_ACHIEVEMENT_PATTERN else None
+    return int(match.group(2)) if match else None
+
+
+def achievement_location_name(achievement_id):
+    """Archipelago label for an achievement, without the location prefix."""
+    match = _AFFIX_ACHIEVEMENT_PATTERN.match(achievement_id or "") if _AFFIX_ACHIEVEMENT_PATTERN else None
+    if match is not None:
+        return "CompleteCurseLevel" + map_display_name(match.group(1)) + match.group(2)
+    return portal_cycle_location_name(achievement_id) or achievement_id
+
+
+_PORTAL_CYCLE_PATTERN = re.compile(r"^Complete(BossRush|Endless)Cycle(\d+)$")
+
+
+def portal_cycle_location_name(achievement_id):
+    """Archipelago label for a Boss Rush / Endless cycle, or None."""
+    match = _PORTAL_CYCLE_PATTERN.match(achievement_id or "")
+    if match is None:
+        return None
+    colour = "Red" if match.group(1) == "BossRush" else "Purple"
+    return "Complete" + colour + "PortalCycle" + match.group(2)
+
+
+def portal_cycle_number(achievement_id):
+    """Cycle number for a Boss Rush / Endless achievement, or None."""
+    match = _PORTAL_CYCLE_PATTERN.match(achievement_id or "")
+    return int(match.group(2)) if match else None
+
 
 def tier_for_curse(curse):
     """Lowest curse tier that covers a curse intensity (1 when unknown)."""
@@ -163,6 +229,26 @@ def achievement_prestige_tier(achievement_id):
     """Prestige level an achievement asks for (`PrestigeRogue150` -> 150)."""
     match = _PRESTIGE_PATTERN.match(achievement_id)
     return int(match.group(1)) if match else None
+
+
+_CHARACTER_UNLOCK_COUNT = re.compile(r"^UnlockCharacterCount\d+$")
+
+
+def is_character_unlock(achievement_id):
+    """True when receiving a character item completes this achievement.
+
+    Character grants run the game's own unlock scans, which complete both
+    `Unlock<Character>` and `UnlockCharacterCount<N>`. Keeping those checks
+    would make the item complete a location by itself and could chain another
+    item to a third player.
+    """
+    achievement_id = achievement_id or ""
+    if _CHARACTER_UNLOCK_COUNT.match(achievement_id):
+        return True
+    return (
+        achievement_id.startswith("Unlock")
+        and achievement_character(achievement_id) is not None
+    )
 
 
 # Characters that actually have achievements, i.e. the ones worth disabling.
@@ -234,7 +320,9 @@ def weapon_slot(weapon_id):
     return int(match.group(2)) if match else 0
 
 
-def select_achievements(excluded_characters=(), max_prestige=None, include_hidden=True):
+def select_achievements(
+    excluded_characters=(), max_prestige=None, include_hidden=True, max_portal_cycle=None
+):
     """Achievement ids that stay in the check pool for one player's options."""
     excluded = {character.lower() for character in excluded_characters}
     kept = []
@@ -246,6 +334,9 @@ def select_achievements(excluded_characters=(), max_prestige=None, include_hidde
             continue
         tier = achievement_prestige_tier(achievement_id)
         if tier is not None and max_prestige is not None and tier > max_prestige:
+            continue
+        cycle = portal_cycle_number(achievement_id)
+        if cycle is not None and max_portal_cycle is not None and cycle > max_portal_cycle:
             continue
         kept.append(achievement_id)
     return kept

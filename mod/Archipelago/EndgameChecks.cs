@@ -77,13 +77,14 @@ namespace SoulstoneAP
         }
 
         /// <summary>Every check that is currently satisfied. Sending is de-duplicated by the caller.</summary>
-        public static List<int> Evaluate(GameSnapshot snapshot)
+        public static List<int> Evaluate(GameSnapshot snapshot, HashSet<int> alreadySent = null)
         {
             var done = new List<int>();
             if (snapshot == null || Specs.Count == 0) return done;
 
             foreach (var spec in Specs)
             {
+                if (alreadySent != null && alreadySent.Contains(spec.Id)) continue;
                 if (Satisfied(spec, snapshot)) done.Add(spec.Id);
             }
 
@@ -423,7 +424,8 @@ namespace SoulstoneAP
         private static bool Reaches(TierProgress entry, EndgameSpec spec)
         {
             if (entry.Tier <= 0) return false;
-            if (entry.Tier > spec.Tier) return true;    // deeper ritual/sigil implies the earlier ones
+            // A deeper sigil proves the earlier ones were cleared, but the +N
+            // ladder is a dynamic level, so the same level has to be reached.
             if (entry.Tier < spec.Tier) return false;
             return entry.DynamicLevel >= spec.Dynamic;
         }

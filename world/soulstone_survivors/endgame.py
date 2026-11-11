@@ -199,9 +199,12 @@ def build(world, profile, characters, allow_weapons):
         )
 
     if sigils:
-        corruption = sigils[0]
-        for step in range(1, endless + 1):
-            add("titan", f"{corruption['name']} +{step}", {"tier": corruption["tier"], "dynamic": step})
+        # Every sigil has its own +N ladder, not just Corruption. "+N" is the
+        # dynamic level (Titan Blood) cleared at that sigil tier, and the game
+        # unlocks it in order, so a higher tier at +N counts for the earlier ones.
+        for sigil in sigils:
+            for step in range(1, endless + 1):
+                add("titan", f"{sigil['name']} +{step}", {"tier": sigil["tier"], "dynamic": step})
 
     if extras >= 2:
         for character in characters:

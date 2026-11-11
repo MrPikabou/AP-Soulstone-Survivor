@@ -47,6 +47,8 @@ RUNE_PREFIX = "Rune: "
 MAP_ITEM_PREFIX = "Map: "
 CHARACTER_ITEM_PREFIX = "Character: "
 WEAPON_ITEM_PREFIX = "Weapon: "
+# Older seeds called filler "Soulstones +N". Current seeds carry the amount in
+# slot_data, so filler names (including the varied tiers) have no prefix.
 FILLER_PREFIX = "Soulstones +"
 
 # Slot data names the bridge command for items whose in-game name carries no
@@ -167,9 +169,79 @@ def granted_maps(ctx) -> typing.Optional[set[str]]:
     return maps
 
 
-def state_to_locations(state: dict, allowed_maps: typing.Optional[set[str]] = None) -> set[str]:
-    """Turns a plugin state snapshot into Archipelago location names."""
+def seed_runes(ctx: typing.Any) -> set[str]:
+    """Rune ids this seed created as checks; empty until slot data arrives."""
+    table = (getattr(ctx, "slot_data", None) or {}).get("runes")
+    return {str(rune_id) for rune_id in table} if isinstance(table, dict) else set()
+
+
+def seed_achievements(ctx: typing.Any) -> typing.Optional[set[str]]:
+    """Achievement ids this seed created as checks.
+
+    New seeds omit character unlock achievements, so the client must not report
+    them just because the game completed them. None means the slot data has not
+    arrived yet; older seed tables still list every check they created.
+    """
+    table = (getattr(ctx, "slot_data", None) or {}).get("achievements")
+    return {str(achievement_id) for achievement_id in table} if isinstance(table, dict) else None
+
+
+def goal_location_names(ctx: typing.Any) -> typing.Optional[set[str]]:
+    """Locations that end this seed, or None before slot data arrives.
+
+    New seeds send `goal_locations` as location ids. Older map seeds only have
+    `goal_maps`, and ancient seeds have neither, in which case the caller keeps
+    the old all-maps fallback.
+    """
+    slot_data = getattr(ctx, "slot_data", None) or {}
     from worlds.soulstone_survivors.Locations import location_name_to_id
+
+    raw = slot_data.get("goal_locations")
+    if isinstance(raw, list):
+        by_id = {location_id: name for name, location_id in location_name_to_id.items()}
+        names = set()
+        for value in raw:
+            try:
+                name = by_id.get(int(value))
+            except (TypeError, ValueError):
+                continue
+            if name:
+                names.add(name)
+        return names
+
+    raw_maps = slot_data.get("goal_maps")
+    if isinstance(raw_maps, list):
+        names = set()
+        for map_name in raw_maps:
+            text = str(map_name)
+            name = text if text.startswith(MAP_LOCATION_PREFIX) else MAP_LOCATION_PREFIX + text
+            if name in location_name_to_id:
+                names.add(name)
+        return names
+
+    return None
+
+
+def state_to_locations(
+    state: dict,
+    allowed_maps: typing.Optional[set[str]] = None,
+    allowed_runes: typing.Optional[set[str]] = None,
+    allowed_achievements: typing.Optional[set[str]] = None,
+    curse_level_names: bool = False,
+) -> set[str]:
+    """Turns a plugin state snapshot into Archipelago location names.
+
+    New seeds ship an empty rune table because rune items no longer have
+    matching checks. Older seeds ship their generated rune checks, which are
+    still reported. `allowed_achievements` is the seed's achievement table;
+    it keeps removed character-unlock checks out of the Python client too.
+    None keeps the legacy behavior for direct callers. `curse_level_names` is
+    true for seeds using the CompleteCurseLevel and red/purple portal labels;
+    old seeds keep the CompleteAffixTier / BossRush / Endless names they were
+    generated with.
+    """
+    from worlds.soulstone_survivors import data
+    from worlds.soulstone_survivors.Locations import legacy_location_name_to_id, location_name_to_id
 
     found: set[str] = set()
 
@@ -184,13 +256,25 @@ def state_to_locations(state: dict, allowed_maps: typing.Optional[set[str]] = No
 
     for achievement in state.get("achievements", []):
         if achievement.get("done") or (achievement.get("progress") or 0) >= 0.999:
-            name = ACHIEVEMENT_PREFIX + achievement.get("id", "")
-            if name in location_name_to_id:
+            achievement_id = achievement.get("id", "") or ""
+            if allowed_achievements is not None and achievement_id not in allowed_achievements:
+                continue
+            if curse_level_names:
+                name = ACHIEVEMENT_PREFIX + data.achievement_location_name(achievement_id)
+                known = name in location_name_to_id
+            else:
+                name = ACHIEVEMENT_PREFIX + achievement_id
+                known = name in legacy_location_name_to_id
+            if known:
                 found.add(name)
 
     # Runes are skill tree nodes; the plugin reports the ones the save has.
+    # Only report rune checks this seed actually created.
     for rune_id in state.get("runes") or []:
-        name = RUNE_PREFIX + str(rune_id)
+        rune_id = str(rune_id)
+        if allowed_runes is not None and rune_id not in allowed_runes:
+            continue
+        name = RUNE_PREFIX + rune_id
         if name in location_name_to_id:
             found.add(name)
 
@@ -244,15 +328,16 @@ class SoulstoneCommandProcessor(ClientCommandProcessor):
         """Manually send a check, e.g. /check Clear SurvivorsCavern"""
         import asyncio
 
-        from worlds.soulstone_survivors.Locations import location_name_to_id
+        from worlds.soulstone_survivors.Locations import legacy_location_name_to_id, location_name_to_id
 
         name = " ".join(name_parts)
-        if name not in location_name_to_id:
+        location_id = location_name_to_id.get(name) or legacy_location_name_to_id.get(name)
+        if location_id is None:
             self.output(f"Unknown location '{name}'.")
             return
         asyncio.create_task(
             self.ctx.send_msgs(
-                [{"cmd": "LocationChecks", "locations": [location_name_to_id[name]]}]
+                [{"cmd": "LocationChecks", "locations": [location_id]}]
             )
         )
         self.output(f"Sent check for '{name}'.")
@@ -306,8 +391,8 @@ async def apply_items(ctx: SoulstoneContext) -> None:
             continue
         command = item_to_bridge_command(name)
         if command is None:
-            # Filler is just called "Soulstones" and the modes are plain names;
-            # slot data carries the bridge command for both.
+            # Filler names carry no prefix and the modes are plain names; slot
+            # data carries the bridge command and amount for both.
             spec = (ctx.slot_data.get("items") or {}).get(str(network_item.item))
             if isinstance(spec, dict):
                 prefix = KIND_TO_PREFIX.get(spec.get("kind"))
@@ -356,12 +441,23 @@ async def game_watcher(ctx: SoulstoneContext) -> None:
         if state is not None:
             ctx.bridge_warned = False
             if state.get("ok"):
-                locations = state_to_locations(state, granted_maps(ctx))
+                locations = state_to_locations(
+                    state,
+                    granted_maps(ctx),
+                    seed_runes(ctx),
+                    seed_achievements(ctx),
+                    bool((ctx.slot_data or {}).get("curse_level_names")),
+                )
                 new_locations = {name for name in locations if name not in ctx.known_locations}
                 if new_locations:
-                    from worlds.soulstone_survivors.Locations import location_name_to_id
+                    from worlds.soulstone_survivors.Locations import legacy_location_name_to_id, location_name_to_id
 
-                    ids = [location_name_to_id[name] for name in new_locations]
+                    ids = [
+                        location_name_to_id[name]
+                        if name in location_name_to_id
+                        else legacy_location_name_to_id[name]
+                        for name in new_locations
+                    ]
                     await ctx.send_msgs([{"cmd": "LocationChecks", "locations": ids}])
                     logger.info(f"Checked {len(ids)} location(s): {', '.join(sorted(new_locations))}")
                 ctx.known_locations = locations
@@ -375,11 +471,14 @@ async def game_watcher(ctx: SoulstoneContext) -> None:
                     logger.info(f"Checked {len(new_endgame)} endgame location(s)")
                 ctx.known_endgame = set(endgame_ids)
 
-                from worlds.soulstone_survivors.Locations import MAP_LOCATIONS
+                goal_locations = goal_location_names(ctx)
+                if goal_locations is None:
+                    from worlds.soulstone_survivors.Locations import MAP_LOCATIONS
 
-                if not ctx.goal_sent and MAP_LOCATIONS and all(m in locations for m in MAP_LOCATIONS):
+                    goal_locations = set(MAP_LOCATIONS)
+                if not ctx.goal_sent and goal_locations and goal_locations <= locations:
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
-                    logger.info("All maps cleared - goal sent.")
+                    logger.info("Goal checks cleared - goal sent.")
                     ctx.goal_sent = True
 
         await asyncio.sleep(POLL_SECONDS)

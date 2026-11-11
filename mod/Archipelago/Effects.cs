@@ -10,16 +10,41 @@ namespace SoulstoneAP
     internal static class PlayerRefs
     {
         private static ManualLogSource Log => Plugin.Logger;
+        private static PlayerCharacter _cached;
+        private static float _nextLookup;
 
         public static bool TryGet(out Entity entity)
         {
             entity = null;
             try
             {
-                var character = UnityEngine.Object.FindObjectOfType<PlayerCharacter>();
-                if (character == null) return false;
+                // FindObjectOfType walks the scene, and several effects ask for the
+                // player every few frames. Keep the live component and only rescan
+                // when it has gone away (run start/end or a scene change).
+                var character = _cached;
+                if (character == null)
+                {
+                    if (Time.unscaledTime < _nextLookup) return false;
+                    _nextLookup = Time.unscaledTime + 0.5f;
+                    character = UnityEngine.Object.FindObjectOfType<PlayerCharacter>();
+                    if (character == null) return false;
+                    _cached = character;
+                }
+
+                if (!character.gameObject.activeInHierarchy)
+                {
+                    _cached = null;
+                    return false;
+                }
+
                 entity = character.Entity;
-                return entity != null;
+                if (entity == null)
+                {
+                    _cached = null;
+                    return false;
+                }
+
+                return true;
             }
             catch (Exception error)
             {
@@ -40,6 +65,7 @@ namespace SoulstoneAP
         {
             public string Name;
             public string Effect;
+            public bool NoStats;
             public Action<Entity, StatsComponent> Apply;
         }
 
@@ -135,6 +161,54 @@ namespace SoulstoneAP
             {
                 Name = "Exhausted", Effect = "-1 dash",
                 Apply = (e, c) => c.AddDashCount(-1),
+            },
+            new Power
+            {
+                Name = "Inverted Controls", Effect = "movement controls reversed for this run",
+                NoStats = true,
+                Apply = (_, __) => ControlEffects.EnableInvertedControls(),
+            },
+            new Power
+            {
+                Name = "Blurred Vision", Effect = "screen blurred by 10% for this run",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.EnableFullBlur(),
+            },
+            new Power
+            {
+                Name = "Tunnel Vision", Effect = "centre 30% blurred, edges clear",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.EnableCenterBlur(),
+            },
+            new Power
+            {
+                Name = "Deuteranopia", Effect = "Deuteranopia colour filter for this run",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.EnableDeuteranopia(),
+            },
+            new Power
+            {
+                Name = "Tritanopia", Effect = "Tritanopia colour filter for this run",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.EnableTritanopia(),
+            },
+            new Power
+            {
+                Name = "Deep Fried", Effect = "oversaturated, high-contrast screen",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.EnableDeepFried(),
+            },
+            new Power
+            {
+                Name = "Blackout", Effect = "blind for the next 5 seconds",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.Blackout(5f),
+            },
+            new Power
+            {
+                Name = "Half Blind", Effect = "left or right half black for this run",
+                NoStats = true,
+                Apply = (_, __) => ScreenEffects.HalfBlack(),
             },
         };
 

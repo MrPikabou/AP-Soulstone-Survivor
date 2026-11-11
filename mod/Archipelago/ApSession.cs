@@ -19,6 +19,21 @@ namespace SoulstoneAP
 
         public volatile string Status = "Not connected";
         public volatile bool Connected;
+        public volatile string Address = "";
+
+        private long _retryAtTicks;
+
+        /// <summary>Whole seconds left before the reconnect attempt, 0 when not waiting.</summary>
+        public int RetrySeconds
+        {
+            get
+            {
+                var ticks = Interlocked.Read(ref _retryAtTicks);
+                if (ticks <= 0) return 0;
+                var left = new TimeSpan(ticks - DateTime.UtcNow.Ticks).TotalSeconds;
+                return left <= 0 ? 0 : (int)Math.Ceiling(left);
+            }
+        }
 
         public ConcurrentQueue<string> Incoming => _incoming;
         public ConcurrentQueue<string> Outgoing => _outgoing;
@@ -30,6 +45,8 @@ namespace SoulstoneAP
             var cts = new CancellationTokenSource();
             _cts = cts;
             Connected = false;
+            Address = host + ":" + port;
+            Interlocked.Exchange(ref _retryAtTicks, 0);
             Status = $"Connecting to {host}:{port}...";
             Task.Run(() => RunAsync(host, port, slot, password, cts.Token));
         }
@@ -39,6 +56,7 @@ namespace SoulstoneAP
             var cts = _cts;
             _cts = null;
             Connected = false;
+            Interlocked.Exchange(ref _retryAtTicks, 0);
             try { cts?.Cancel(); } catch { /* already gone */ }
             Status = "Not connected";
         }
@@ -94,6 +112,7 @@ namespace SoulstoneAP
                                 Status = $"Connecting to {scheme}://{host}:{port}...";
                                 await socket.ConnectAsync(new Uri($"{scheme}://{host}:{port}"), token).ConfigureAwait(false);
                                 reached = true;
+                                Connected = true;
                                 Status = "Connected, joining slot...";
 
                                 var sender = Task.Run(() => SendLoopAsync(socket, token), token);
@@ -128,10 +147,13 @@ namespace SoulstoneAP
                 if (token.IsCancellationRequested) break;
 
                 Status = "Disconnected - retrying in 5s";
+                Interlocked.Exchange(ref _retryAtTicks, DateTime.UtcNow.AddSeconds(5).Ticks);
                 try { await Task.Delay(5000, token).ConfigureAwait(false); }
                 catch (OperationCanceledException) { break; }
+                Interlocked.Exchange(ref _retryAtTicks, 0);
             }
 
+            Interlocked.Exchange(ref _retryAtTicks, 0);
             Status = "Not connected";
         }
 

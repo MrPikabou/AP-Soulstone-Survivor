@@ -65,6 +65,7 @@ Two config switches are worth knowing:
   first time a save slot is loaded.
 * `Panel/ShowOnSlotScreen` (default `false`) - show the panel on the save-slot
   screen at boot as well (the older behaviour).
+* `HUD/Sounds` (default `true`) - short tone for progression items and traps.
 * `Safety/AllowedProfileIndex` (default `1`) - the only save slot the mod will
   read or write.
 * `Gating/ItemOnlyUnlocks` (default `true`) - characters, rune nodes and the two
@@ -130,9 +131,11 @@ there, which would leave the packaged world with no checks at all.
 Verified by removing the loose world folder, installing only the built
 `.apworld` into `worlds/`, and generating a seed from a YAML that used
 `disabled_characters: [rogue, Blacksmith]` (names are case-insensitive),
-`max_prestige: 100` and `hidden_achievements: false`: 431 checks of 483, five
-maps, no Rogue or Blacksmith checks, no hidden ones, no 150-tier prestige
-checks. A default seed still generates 483 checks.
+`max_prestige: 100` and `hidden_achievements: false`: five maps, no Rogue or
+Blacksmith checks, no hidden ones, and no 150-tier prestige checks. New seeds
+also omit character unlock checks. Rune unlocks are items only in new seeds; no
+matching `Rune:` locations are generated, so receiving a rune cannot complete a
+check and chain another item to a third player.
 
 ## Sharing the mod (Thunderstore)
 
@@ -180,23 +183,29 @@ the plugin. Ship the `.apworld` next to the release (GitHub release, or a link i
 
 | Option | Default | Effect |
 | --- | --- | --- |
-| `death_link` | off | Received deaths offer a choice of negative Powers |
+| `death_link` | off | Received deaths offer a choice of negative Powers, including screen burdens |
 | `knockback_link` | off | Damage sends/receives shoves |
-| `achievement_checks` | on | Include the 483 achievements as checks (off = 5 map checks only) |
+| `achievement_checks` | on | Include achievement checks (off = 5 map checks only); character unlock achievements are always omitted |
 | `disabled_characters` | none | Character names whose achievements are dropped from the check pool |
+| `starting_character` | `barbarian` | Starter character: any character name (snake_case, e.g. `arcane_weaver`) or `random`; a non-Barbarian starter is precollected and removed from the item pool |
 | `max_prestige` | 150 | Highest prestige tier that still counts (0 = no prestige checks) |
-| `hidden_achievements` | on | Include the 11 hidden achievements as checks |
+| `max_portal_cycle` | 3 | Highest Red/Purple portal cycle kept as checks (1 = only cycle 1, dropping cycles 2-3) |
+| `balance_checks` | on | Put long prestige, skill-tree, lifetime-counter and portal-cycle checks behind a growing owned-character roster |
+| `hidden_achievements` | on | Include hidden achievement checks; character unlock checks stay omitted |
 | `endgame_checks` | medium | Curse ladder, Unholy Cathedral rituals and Titan Hunt sigils (off/easy/medium/hard) |
-| `weapon_unlocks` | on | Include the 88 blacksmith weapon unlocks as useful items |
-| `rune_unlocks` | on | Include every rune as a usable item plus a "Rune: …" check |
+| `weapon_unlocks` | on | Mode switch. On = weapons are 88 items and all 110 craft achievements leave the pool; off = weapons are crafted, gated by one licence per character |
+| `rune_unlocks` | on | Include every rune as a usable item; no matching rune locations (prevents chain checks) |
 | `map_unlocks` | on | The five Void Fields maps are items; off = all maps unlocked from the start |
 | `curse_tier_unlocks` | on | Curse tiers I-VII are items, and curse checks need their tier |
 | `weapon_upgrade_unlocks` | on | Blacksmith upgrade ceiling is items: +3, +5, +8, +10, +15, then unlimited |
 | `endgame_mode_unlocks` | on | Unholy Cathedral / Titan Hunt are items, and their checks need them |
 | `trap_count` | 5 | How many trap items go into the pool (0 disables them) |
 | `resource_cache_count` | 8 | How many `Resource Cache` items go into the pool (0 disables them) |
-| `filler_soulstones` | 100 | Soulstones each filler item grants |
-| `maps_required` | 5 | Map clears needed for victory (1-5) |
+| `filler_soulstones` | 100 | Base Soulstones each filler item grants |
+| `filler_variety` | on | Split filler into Shard/Cluster/Cache/Hoard stacks at 50/75/125/150% of `filler_soulstones`; off = one `Soulstones` item per slot |
+| `maps_required` | 5 | Map clears needed for the maps goal (1-5) |
+| `goal` | maps | Victory path: `maps` or `portals` |
+| `portal_goal` | both | For `goal: portals`: `red`, `purple`, or `both` cycle-3 checks |
 
 YAML example:
 
@@ -206,7 +215,10 @@ game: Soulstone Survivors
 Soulstone Survivors:
   achievement_checks: true
   disabled_characters: [Pyromancer, Necromancer]
+  starting_character: random
   max_prestige: 100
+  max_portal_cycle: 1
+  balance_checks: true
   hidden_achievements: false
   endgame_checks: hard
   weapon_unlocks: true
@@ -221,17 +233,22 @@ Soulstone Survivors:
 
 Runes have no unlock list of their own in the save: each one is granted by a
 dedicated skill tree node (`SkillTreeUnlockRuneSO`, which carries the rune id).
-The plugin dumps those nodes in the catalog, so every rune becomes
+The plugin dumps those nodes in the catalog, so every rune becomes an item -
+`Rune: <runeId>`. Receiving it unlocks the node outright at level 1, ignoring
+its tier requirement and prerequisite nodes (`PlayerProfileSkillTree.Add` + a
+`SkillTree` save).
 
-* an item - `Rune: <runeId>` - and
-* a check - `Rune: <runeId>` - that ticks when the save owns that node.
+Rune items are deliberately not locations in new seeds. A rune-granted node
+would complete its own check on the next poll, and that location could contain
+another player's item - an unintended item-to-check chain. The rest of the tree
+stays yours: stat nodes are still bought with your own skill points. With
+`Gating/ItemOnlyUnlocks` on, a rune node cannot be bought locally; only the item
+unlocks it. Because runes gate no other check they are classed as `useful`.
 
-Receiving the item unlocks the node outright at level 1, ignoring its tier
-requirement and prerequisite nodes (`PlayerProfileSkillTree.Add` + a `SkillTree`
-save), and the matching check is reported on the next poll. Everything else in
-the tree stays yours: stat nodes are still bought with your own skill points, and
-nothing blocks buying a rune node locally either - the item is a shortcut, not a
-replacement. Because runes gate no other check they are classed as `useful`.
+Older seeds keep the `Rune:` locations they were generated with. The Python
+client reads the seed's rune table, so it still reports those legacy checks but
+will not report rune locations a new seed does not have. Regenerate the seed to
+remove the chain.
 
 **After the first launch of a plugin that knows about runes**, refresh the
 catalog so the world knows the rune ids:
@@ -242,7 +259,7 @@ bash deploy_world.sh
 python tools/build_apworld.py     # ship the refreshed catalog with the world
 ```
 
-Without that step the world simply generates with no rune items or checks.
+Without that step the world simply generates with no rune items.
 
 ### Item-only unlocks
 
@@ -253,7 +270,7 @@ slot - every other slot behaves normally):
 | Gate | Hook | Effect |
 | --- | --- | --- |
 | Characters | `PlayerProfileUnlockedCharacters.AddUnlockedCharacter` prefix, plus `CharacterScreenPanel.OnSelectPressed` / `ControllerPurchase` | an `Unlock <character>` achievement no longer adds the character, and the character screen's buy button is refused before it spends currency; only the item does |
-| Weapons | `CraftingScreenPanel.DoOnCraftPressed` prefix | crafting a weapon the save does not own is refused, so the blacksmith can't unlock it; only a `Weapon: <id>` item does |
+| Weapons | `CraftingScreenPanel.DoOnCraftPressed` prefix | crafting a weapon the save does not own is refused: with weapons as items only its `Weapon: <id>` item opens it, with crafting mode only that character's `Craft:` licence does |
 | Runes | `PlayerProfileSkillTree.Add` prefix | a `SkillTreeUnlockRuneSO` node cannot be bought with skill points, so nodes behind it stay locked until the rune item arrives |
 | Modes | `AchievementCollectionSO.CompleteSpecificAchievement` prefix | the `RequiredAchievement` of Unholy Cathedral / Titan Hunt cannot complete by itself, so the mode opens only with its item |
 | Maps | `MapItem.IsRequiredAchievementCompleted` getter + `MapItem.OnSelectPressed` prefix | the map button's lock is overridden with "has this map's item arrived", and the click is refused otherwise, so a map unlocked by the game's own achievements stays shut |
@@ -312,6 +329,19 @@ the maps have to arrive as items again; note that this also drops that map's
 completeness, its affix selections and its curse tier rows, and that checks
 already sent to the server stay sent.
 
+### Victory goal
+
+`goal` chooses what ends the seed. The default `maps` clears the first
+`maps_required` standard maps. `portals` instead ends the seed by completing one
+or both cycle-3 portal checks, selected with `portal_goal` (`red`, `purple`, or
+`both`; default `both`).
+
+A portal goal needs `achievement_checks: true` and `max_portal_cycle: 3`; the
+cycle-3 checks must exist or generation stops with an option error. With
+`balance_checks` on, they keep their eight-character roster gate, so the goal is
+a late-game objective. The in-game HUD shows `n/N maps` or `n/N portals` from
+the seed's `goal_locations` and `goal_label` slot data.
+
 ### Curse tiers
 
 The I-VII badges on a map are `AffixTier`s. The save keeps one
@@ -328,6 +358,18 @@ curse 40 before `Curse Tier V` exists.
 The real thresholds, as dumped from the installed build: I at 0, II at 5, III at
 11, IV at 21, V at 33, VI at 44, VII at 53 curse intensity. So curse 10 needs
 `Curse Tier II`, curse 40 needs `Curse Tier V`, curse 62 needs `Curse Tier VII`.
+
+The five maps' affix-tier achievements are displayed as
+`Achievement: CompleteCurseLevel<Map><Tier>` - for example,
+`Achievement: CompleteCurseLevelCavern2`. The underlying game ids still begin
+with `CompleteAffixTier`; that is what the plugin reports. With
+`curse_tier_unlocks` on, the tier V and VI checks require `Curse Tier V`/`VI`,
+so they cannot be in sphere 1.
+
+Boss Rush and Endless cycle achievements are displayed as
+`CompleteRedPortalCycle<N>` and `CompletePurplePortalCycle<N>`. Their
+underlying game ids still begin with `CompleteBossRushCycle` and
+`CompleteEndlessCycle`, and their location ids are unchanged.
 
 Self-unlock is blocked by a sweep, not a hook: `PlayerProfileAffixTierProgressionData.set_Progression`
 cannot be patched on this build (Harmony fails with an `IL Compile Error`), so the
@@ -403,20 +445,25 @@ Artifact actually lands lower than +15, tighten it there.
 
 Bridge command: `GRANT item=WeaponCap:5` (or `WeaponCap:-1` for unlimited).
 
-To test an upgrade without farming, materials can be added straight to the
-inventory (`InventoryItemData { ItemId, Quantity }`, saved with
-`SaveFileKind.Inventory`):
+### Weapon modes
 
-```powershell
-# one material - ItemId names: CommonIron/Silver/Gold/Tin, UncommonSapphire/Emerald/Topaz/Ruby/Quartz,
-# RareCobalt/Mithril/Palladium/Platinum/Titanium, EpicAdamantite/Demonite/Meteorite/Obsidian/Orichalcum,
-# LegendaryAmber/Amethyst/Aquamarine/Diamond/Tourmaline
-python tools/bridge_test.py "MATERIALS item=CommonSilver n=200"
-python tools/bridge_test.py "MATERIALS item=UncommonSapphire n=200"
+`weapon_unlocks` is the mode switch, and the two modes are exclusive.
 
-# every mineral at once
-python tools/bridge_test.py "MATERIALS n=500"
-```
+- **On (default), weapons are items.** The seed ships the 88 `Weapon: <id>`
+  unlocks as useful items, and every craft achievement leaves the check pool: the
+  22 `CraftAllCharacterWeapons<Char>` and the 88 `CraftWeapon<Char><n>`. Crafting
+  is not part of that seed, so those checks could never fire.
+- **Off, weapons are crafted.** No weapon items; the blacksmith works like the
+  normal game, and one `Craft: <Character>` licence per character (22 items,
+  progression) unlocks crafting that character's weapons. All 110 craft
+  achievements stay as checks and are gated in logic on the matching licence.
+
+A weapon the save already owns still passes the vanilla achievement check, and a
+licensed character skips that ladder for its whole weapon set. Licences live in
+the plugin config (`Archipelago/CraftingLicences`) so they survive a restart, and
+are cleared when the seed name changes.
+
+Bridge command: `GRANT item=Craft:Barbarian`.
 
 ### Endgame modes
 
@@ -436,11 +483,24 @@ The bridge command behind the item is `Mode:Mastery` / `Mode:Crusade`.
 
 ### Filtering checks
 
-`disabled_characters` drops every check that names the character: its `Unlock`,
+`disabled_characters` drops every remaining check that names the character: its
 `Prestige`, `CompleteSkillTree`, `CraftWeapon` / `CraftAllCharacterWeapons` and
-`CompleteMatchInLessThanTime` achievements - 18 checks for a typical character,
-36 for two. Names are case-insensitive and validated at generation time; a typo
-fails loudly with the full list of valid names.
+`CompleteMatchInLessThanTime` achievements - 17 catalog checks for a typical
+character, fewer in weapons-as-items mode where craft checks are already gone.
+The `Unlock` check is already omitted in new seeds. Names are case-insensitive
+and validated at generation time; a typo fails loudly with the full list of
+valid names.
+
+New seeds omit every character unlock achievement: `Unlock<character>` and the
+`UnlockCharacterCount8/14/22` milestones. Receiving a `Character: <name>` item
+runs the game's own unlock scans and completes them, so they would be free
+checks. Older seeds keep their generated unlock checks. Both the in-game plugin
+and the Python client only report checks listed in the seed's slot data.
+
+Every remaining character-scoped achievement requires that character's
+`Character:` item in logic, so a character unlock cannot be placed on its own
+prestige, skill-tree, craft or match check. Barbarian is auto-unlocked and has
+no item; its checks do not require one.
 
 `max_prestige` caps the per-character prestige ladder. Prestige achievements ask
 for tiers 5, 10, 20, 30, 40, 50, 60, 70, 100 and 150, so `100` drops the 23
@@ -448,16 +508,69 @@ for tiers 5, 10, 20, 30, 40, 50, 60, 70, 100 and 150, so `100` drops the 23
 the whole ladder - 209 checks, including the prestige-50-on-multiple-characters
 one, which goes away at any cap below 50.
 
-`hidden_achievements: false` removes the 11 flags marked hidden in the catalog
-(`UnlockBlacksmith`, the Valentine Altar / Cave Elemental / Sasquach curse-tier
-ones, `CompleteCrusadeTier5` and friends).
+`max_portal_cycle` caps the Red and Purple portal ladders. The default `3`
+keeps all six cycle checks; `1` keeps both cycle-1 checks and drops Red/Purple
+cycles 2 and 3 (four checks). It only filters checks, so no item or location ids
+change.
 
-Global counters are deliberately left alone - `UnlockCharacterCount22`,
-`CompleteSkillTreeCount22`, `ReachTotalEnemiesKilled*`, the mastery tiers - they
-track in-game progress across every character, so disabling one character's
-checks does not make them unreachable. Character and weapon **items** are also
-unchanged: a disabled character still arrives as an unlock, it just no longer
-brings its own achievement checks.
+`hidden_achievements: false` removes the hidden flags marked in the catalog
+(the Valentine Altar / Cave Elemental / Sasquach curse-tier ones,
+`CompleteCrusadeTier5` and friends). `UnlockBlacksmith` is hidden but is already
+omitted as a character unlock check.
+
+Global counters are not removed by `disabled_characters` - `CompleteSkillTreeCount22`,
+`ReachTotalEnemiesKilled*`, the mastery tiers - they track in-game progress
+across every character, so disabling one character's checks does not make them
+unreachable. With `balance_checks` on, the largest lifetime counters are gated
+in logic but still present. Character and weapon **items** are also unchanged:
+a disabled character still arrives as an unlock, it just no longer brings its
+own achievement checks.
+
+### Starting character
+
+`starting_character` picks the character you begin with. The default,
+`barbarian`, keeps the game's auto-unlocked starter and changes nothing, so old
+YAMLs and seeds behave as before. Any character from the catalog can be chosen
+by its snake_case name (`arcane_weaver`, `monkey_king`, ...), or `random` picks
+one of the 23 for you.
+
+A non-Barbarian starter is pushed as a precollected `Character: <name>` item and
+that item is removed from the pool, so it is not shuffled back in. Its
+character-scoped checks work from the start, and it counts toward the roster
+gates. Barbarian itself has no item; it stays unlocked by the game either way,
+so choosing another starter adds that character on top of it rather than
+removing Barbarian.
+
+### High-grind balancing
+
+`balance_checks` (default on) puts the longest achievements behind a growing
+roster of owned characters. These are real item requirements: no gate items
+are added to the pool and no item ids change. A character item is never placed
+on a check that requires a character roster, so an achievement cannot lock its
+own unlock.
+
+| Balance band | Owned characters required |
+| --- | --- |
+| Prestige 35 | 2 |
+| Prestige 50 | 4 |
+| Prestige 100 | 8 |
+| Prestige 150 | 14 |
+| Red/Purple portal cycle 1 / 2 / 3 | 2 / 4 / 8 |
+
+Every `CompleteSkillTree<Character>` check requires 8 owned characters plus
+that character's own item. `CompleteSkillTreeCount8/14/22` require 8/14/22
+characters. Red and Purple portal cycles 1/2/3 require 2/4/8 characters. The
+largest lifetime counters use the same bands: the 75,000 enemy
+kill and 1,000 elite checks need 2 characters; 100,000 / 400 bosses / 1,500
+elites need 4; 300,000 / 600 bosses / 2,000 elites need 8; 500,000 / 700 bosses
+/ 3,000 elites need 14. These are deterministic logic gates, not placement
+weights; `balance_checks: false` removes them.
+
+`max_prestige` still caps the pool first, so a seed with `max_prestige: 100` has
+no 150 prestige checks; the 150 band can still apply to the 500,000 kill check.
+`balance_checks: false` restores the old flat logic. The in-game check browser
+lists the character item for character checks; roster thresholds are visible in
+the Archipelago tracker and playthrough.
 
 ### Endgame checks
 
@@ -471,9 +584,9 @@ names have to stay stable for that seed and match what the plugin reports.
 | "with 5 characters" curse | – | one random curse per map | same |
 | random weapon combo | – | – | 2 per map, random curse 1-62 |
 | Ritual of Sin / Hate / Heresy | all three | all three | all three + every character |
-| Heresy endless | +1 | +1 … +5 | +1 … +10 |
+| Ritual endless (Heresy) | +1 | +1 … +5 | +1 … +10 |
 | Sigil of Corruption … Void | all five | all five | all five + every character |
-| Corruption endless (cycles) | +1 | +1 … +5 | +1 … +10 |
+| Sigil endless (each sigil) | +1 | +1 … +5 | +1 … +10 |
 | Checks generated | ~20 | ~50 | ~250 |
 
 Location names read as `Curse 30: SurvivorsCavern`, `Curse 47: SurvivorsCavern /
@@ -564,25 +677,32 @@ it applies the moment the slot loads.
 ## Design
 
 * **Items** - `Character: <Name>` (22 progression unlocks), `Weapon: <id>` (88
-  weapons that are not auto-unlocked), 6 `Trap: ...` items, and
-  `Soulstones +100` (filler currency).
-* **Locations** - `Clear <map>` (5 standard maps) and `Achievement: <id>`
-  (483 achievements) = 488 checks.
-* **Goal** - clear every standard map in normal mode.
+  weapons that are not auto-unlocked), 6 `Trap: ...` items, and varied
+  Soulstone filler (`Shard`, `Cluster`, `Cache`, `Hoard`; 50/75/125/150% of
+  `filler_soulstones`, averaging the same total as the old single stack).
+* **Locations** - `Clear <map>` (5 standard maps) and the `Achievement: <id>`
+  checks kept by the current options. Character unlock achievements are omitted
+  in new seeds because character items complete them.
+* **Goal** - clear the first `maps_required` standard maps, or complete the
+  selected cycle-3 Red/Purple portal checks with `goal: portals`.
 
-Logic is deliberately flat: in-game progression (clear a map to open the next)
-still applies, but every check is considered reachable. The randomization comes
-from which characters and weapons the multiworld gives you.
+Logic is mostly flat: in-game progression (clear a map to open the next) still
+applies, while maps, craft licences, weapon caps, endgame modes and curse tiers
+add their own gates. With `balance_checks` on (default), high-prestige and very
+large lifetime-counter checks also sit on a fixed five-step ladder; turning it
+off restores the old flat achievement logic. The randomization comes from which
+characters and weapons the multiworld gives you.
 
 ## Links and traps
 
 ### DeathLink - "Cursed Powers"
 
 A received death does **not** kill you. Instead a modal prompt offers three
-**negative Powers** and you pick one, exactly like a level-up card choice. They
-are the inverse of real level-up cards, applied through the same `Stats` pipeline
-the cards use, so they stack like a normal Power and last until the run ends.
-Your own deaths are reported as DeathLink events too.
+**negative Powers** and you pick one, exactly like a level-up card choice. Most
+stat burdens are the inverse of real level-up cards, applied through the same
+`Stats` pipeline the cards use, so they stack like a normal Power and last until
+the run ends. Some choices are screen or input burdens instead. Your own deaths
+are reported as DeathLink events too.
 
 The picker is built from uGUI + TextMeshPro and runs on unscaled time, so it is
 clickable even while the game is paused on the level-up screen. If several deaths
@@ -604,6 +724,22 @@ arrive at once the choices queue up and the next one opens after you pick.
 | Breakable | +2 damage taken | Unbreakable |
 | Battered | -20% healing | (healing powers) |
 | Exhausted | -1 dash | Swift |
+| Inverted Controls | Movement controls are reversed for the rest of the run | (input effect) |
+
+#### Screen burdens
+
+These are visual effects rather than stat inversions. They last for the rest of
+the run (the blackout is the exception) and clear when the run ends.
+
+| Screen burden | Effect |
+| --- | --- |
+| Blurred Vision | Screen blurred by 10% (low-resolution blur) for the rest of the run |
+| Tunnel Vision | The centre 30% of the screen is blurred; the edges stay clear |
+| Deuteranopia | Deuteranopia colour filter for the rest of the run |
+| Tritanopia | Tritanopia colour filter for the rest of the run |
+| Deep Fried | Oversaturated, high-contrast screen with bloom and chromatic aberration |
+| Blackout | Player is blind for the next 5 seconds |
+| Half Blind | Left or right half of the screen turns black for the rest of the run |
 
 Enable with `death_link: true` in your player yaml. The panel shows the effect
 (`| Death link: Frail`), and the log records every one.
@@ -694,11 +830,11 @@ change what counts as a check without touching game data:
   maps; add a biome or name filter there.
 * **Change item categories** - [`Items.py`](world/soulstone_survivors/Items.py):
   `CHARACTER_PREFIX`/`WEAPON_PREFIX` build names, `item_classifications` sets
-  progression vs useful, and `data.FILLER_NAME` / `FILLER_AMOUNT` control the
-  filler currency (raise `FILLER_AMOUNT` for bigger payouts).
+  progression vs useful, and `FILLER_VARIANTS` / `filler_amounts` control the
+  filler currency (raise `filler_soulstones` for bigger payouts).
 * **Change the goal** - [`__init__.py`](world/soulstone_survivors/__init__.py):
-  `MAP_LOCATIONS` in `set_rules` is the victory condition; swap it for an
-  achievement subset if you prefer.
+  `set_rules` uses `self.goal_locations`; `SoulstoneGoal` and
+  `SoulstonePortalGoal` pick maps or the cycle-3 portal target.
 
 After editing: `bash deploy_world.sh`, then generate a fresh seed. Ids are stable
 as long as `catalog.json` is unchanged, so existing seeds keep working.
@@ -728,3 +864,72 @@ as long as `catalog.json` is unchanged, so existing seeds keep working.
   still on the slot-selection screen.
 * Missing `jellyfish`, `bsdiff4`, `pathspec`, `setuptools` errors come from
   running Archipelago with a Python env that is not `.tools/venv`.
+
+### Check list on the map and character screens
+
+Each map card and each character tile gets a small `! done/total` button in its
+top-left corner, drawn on a separate overlay canvas (sorting order 26000) so the
+game's own prefabs and layout are untouched. Clicking it opens a standalone check
+window for that map or character, with the three groups: doable now, blocked (the
+missing items are named), and completed. Escape or the X closes it, and the
+window scrolls with the same velocity-based wheel handling as the F8 log.
+
+F8 itself is back to two tabs, Checks and Console; the old Maps tab is gone. A
+`Global` button sits next to those tabs and opens the same check window filtered
+to checks with neither a map nor a character: portal cycles, lifetime counters,
+skill-tree counts, mastery tiers and the other global achievements.
+
+Under the log the panel has `Hint`, `Missing`, `Goal`, `Release` and `Collect`
+buttons. They send the matching server command (`!hint`, `!missing`, ...), echo
+it into the Checks log and print the server's reply there; replies are also
+mirrored to the BepInEx console.
+
+The per-check data comes from the seed's `location_info` (id -> name, map,
+character, needs). On a seed made before that field existed the (!) buttons
+still open the window, but it can only report that the seed has no location
+data; regenerate the world with the current apworld to fill it in.
+
+Unholy Cathedral and Titan Hunt get the same button on their mode panels. The
+Cathedral list holds the ritual checks (Sin, Hate, Heresy plus their
+`as <character>` and +N variants); the Titan Hunt list holds the sigil checks.
+Both open the same window, grouped into doable now / blocked / completed.
+
+### Rune icons over the skill tree smoke
+
+`RuneOverlay` draws each unlocked rune's full logo - the node's slot frame with
+the rune art on top - over the smoke while the skill tree is open. A rune
+counts as unlocked when its node level is above 0, the save already has it, or
+its item has arrived this session. The frame and art are copied from the live
+`SkillTreePanelItem` (`SlotIcon` and `Icon`), with `SkillTreeUnlockRuneSO.GetSkillIcon`
+as the art fallback, matched by `IdHash` through `RuneNodes.ForHash`. Markers are
+sized from the node's screen bounds, so they scale with the tree zoom, and they
+are repositioned every frame to follow the camera rather than once per scan.
+If neither sprite is available the overlay falls back to the rune name. Markers
+sit on a 26500 canvas and disappear when the tree closes.
+
+### Top-left feed
+
+A small stack in the top-left corner shows the last few items and checks: your
+received items, your completed checks, and other players' finds and goals. Rows
+carry the rune's own artwork when the entry is a rune, a character portrait when
+one is loaded, and the Archipelago logo otherwise. They fade out after about
+6.5 seconds and disappear by 9. F9 toggles the feed; it sits below the F8 panel
+and keeps the newest six entries.
+
+### Status HUD, goal chip and colours
+
+A compact panel in the top-right corner stays visible outside F8. The dot is
+green when connected, amber while connecting or joining, and red with a
+`retry in Ns` countdown after a drop. The same panel names the server and, once
+a slot is joined, shows the goal as `n/N maps` or `n/N portals`.
+
+The goal count uses the `goal_locations` list (location ids) and `goal_label` in
+slot data. Older seeds fall back to `goal_maps`; seeds generated before either
+field existed simply do not show the chip.
+
+Feed rows are coloured by item classification: gold for progression, blue for
+useful, grey for filler, red for traps and green for your checks. The left
+border, outline and text use the same colour, and the F8 Checks log colours its
+lines the same way. The `(!)` badge text is gold. `HUD/Sounds` (default `true`)
+plays a short tone for progression items and traps, rate-limited so a batch of
+starting items does not stack tones.

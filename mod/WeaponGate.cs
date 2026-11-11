@@ -51,6 +51,14 @@ namespace SoulstoneAP
         /// <summary>Returns false to skip the vanilla achievement check.</summary>
         private static bool AllowOwnedWeapon(string weaponId, ref bool __result)
         {
+            if (GameState.CanCraft(weaponId))
+            {
+                // Licence in hand: the achievement ladder is skipped for crafting
+                // this character's weapons, which is the point of the licence.
+                __result = true;
+                return false;
+            }
+
             if (!Owned(weaponId)) return true; // not granted by the multiworld - run the game's own check
 
             __result = true;

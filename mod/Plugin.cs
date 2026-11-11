@@ -15,7 +15,7 @@ namespace SoulstoneAP
         public const string Guid = "soulstone.ap.bridge";
         // Shown in the panel status line, so a game left running on an older
         // DLL is obvious instead of looking like a broken command.
-        public const string Version = "1.0.7";
+        public const string Version = "1.3.0";
 
         public static Plugin Instance { get; private set; }
 
@@ -37,12 +37,14 @@ namespace SoulstoneAP
         internal static ConfigEntry<bool> AutoConnect;
         internal static ConfigEntry<bool> ShowPanelOnSlotScreen;
         internal static ConfigEntry<bool> OpenPanelAfterSaveLoad;
+        internal static ConfigEntry<bool> FeedSounds;
 
         /// <summary>How many of the seed's items have already been applied. Set to 0 to re-apply everything.</summary>
         internal static ConfigEntry<int> AppliedItems;
 
         /// <summary>Seed + slot the <see cref="AppliedItems"/> counter belongs to. A new seed resets it.</summary>
         internal static ConfigEntry<string> AppliedSeed;
+        internal static ConfigEntry<string> LicensedCrafters;
 
         public override void Load()
         {
@@ -80,12 +82,20 @@ namespace SoulstoneAP
                 "Pop the panel up on the save-slot screen at boot. Off means it appears only after you pick your save (or via F8).");
             OpenPanelAfterSaveLoad = Config.Bind("Panel", "OpenAfterSaveLoad", true,
                 "Open the panel once by itself when the save you picked has loaded. F8 always toggles it.");
+            FeedSounds = Config.Bind("HUD", "Sounds", true,
+                "Play a short tone when a progression item or a trap arrives.");
             AppliedItems = Config.Bind("Archipelago", "AppliedItems", 0,
                 "Internal: number of received items already applied. Reset to 0 to re-apply the whole seed.");
             AppliedSeed = Config.Bind("Archipelago", "AppliedSeed", "",
                 "Internal: seed and slot the AppliedItems counter belongs to. Joining a different seed starts the counter over.");
 
+            LicensedCrafters = Config.Bind("Archipelago", "CraftingLicences", "",
+                "Internal: characters whose Craft: item has arrived this seed. Cleared when the seed changes.");
+
             GameState.Log = Log;
+            GameState.LoadLicences();
+            try { ConsoleLog.Install(); }
+            catch (Exception e) { Log.LogWarning("console mirror unavailable: " + e.Message); }
             // Both gates are active from the first frame, not once a slot is joined:
             // playing offline must not be a way around them.
             GameState.MapsFromItems = ItemOnlyMaps.Value;
@@ -103,10 +113,18 @@ namespace SoulstoneAP
 
             WeaponGate.Apply(BypassWeaponRequirements);
             ItemGating.Apply(EnforceItemGating);
+            ControlEffects.Apply();
 
             AddComponent<BridgePump>();
             AddComponent<ApRuntime>();
             AddComponent<ApPanel>();
+            AddComponent<CheckBadges>();
+            AddComponent<CheckListPanel>();
+            AddComponent<RuneOverlay>();
+            AddComponent<TopLeftFeed>();
+            AddComponent<StatusHud>();
+            AddComponent<ScreenEffects>();
+            AddComponent<ControlEffects>();
             AddComponent<CursedChoice>();
 
             Log.LogInfo("In-game Archipelago panel ready (F8 to open).");

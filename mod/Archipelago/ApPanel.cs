@@ -25,7 +25,8 @@ namespace SoulstoneAP
     public sealed class ApPanel : MonoBehaviour
     {
         private const float PanelWidth = 560f;
-        private const float PanelHeight = 560f;
+        private const float PanelHeight = 660f;
+        private const float LogHeight = 132f;
         private const int MaxFieldLength = 120;
 
         private static readonly Color PanelColor = new Color(0.09f, 0.09f, 0.12f, 0.97f);
@@ -33,6 +34,7 @@ namespace SoulstoneAP
         private static readonly Color FieldActiveColor = new Color(0.21f, 0.26f, 0.34f, 1f);
         private static readonly Color AccentColor = new Color(0.29f, 0.52f, 0.78f, 1f);
         private static readonly Color MutedColor = new Color(0.62f, 0.64f, 0.70f, 1f);
+        private static readonly Color ChatColor = new Color(0.22f, 0.25f, 0.33f, 1f);
 
         private sealed class Field
         {
@@ -66,8 +68,11 @@ namespace SoulstoneAP
         private TextMeshProUGUI _statusText;
         private TextMeshProUGUI _errorText;
         private TextMeshProUGUI _connectLabel;
-        private TextMeshProUGUI _receivedText;
-        private string _receivedShown = "";
+        private TextMeshProUGUI _logText;
+        private RectTransform _logContent;
+        private ScrollRect _logScroll;
+        private int _logVersion = int.MinValue;
+        private bool _showConsole;
 
         private Texture2D _logo;
         private float _bootTime;
@@ -138,6 +143,7 @@ namespace SoulstoneAP
 
             if (!visible) return;
 
+            HandleLogScroll();
             HandleClickOutside();
             HandleTyping();
 
@@ -472,15 +478,77 @@ namespace SoulstoneAP
                 new Vector2(0f, -398f), new Vector2(PanelWidth - 40f, 34f));
             _statusText.enableWordWrapping = true;
 
-            // A short running list of what actually arrived, and who sent it.
-            MakeText(root, "ReceivedTitle", "Received from the multiworld", 12f,
-                TextAlignmentOptions.Center, MutedColor, new Vector2(0f, -440f),
-                new Vector2(PanelWidth - 40f, 18f));
+            // Two views share the scroll box: the check/item log and the console.
+            MakeButton(root, "ChecksTab", "Checks", AccentColor, new Vector2(-96f, -436f),
+                new Vector2(150f, 26f), () => SetView(0), out var checksTab);
+            checksTab.fontSize = 14f;
+            MakeButton(root, "ConsoleTab", "Console", new Color(0.28f, 0.29f, 0.34f, 1f),
+                new Vector2(64f, -436f), new Vector2(150f, 26f), () => SetView(1), out var consoleTab);
+            consoleTab.fontSize = 14f;
+            MakeButton(root, "GlobalButton", "Global", new Color(0.25f, 0.37f, 0.52f, 1f),
+                new Vector2(204f, -436f), new Vector2(104f, 26f), () => CheckListPanel.ShowGlobal(), out var globalButton);
+            globalButton.fontSize = 13f;
 
-            _receivedText = MakeText(root, "Received", "nothing yet", 13f,
-                TextAlignmentOptions.TopLeft, new Color(0.82f, 0.85f, 0.90f, 1f),
-                new Vector2(0f, -460f), new Vector2(PanelWidth - 80f, 84f));
-            _receivedText.enableWordWrapping = true;
+            MakeButton(root, "ChatHint", "Hint", ChatColor,
+                new Vector2(-200f, -612f), new Vector2(92f, 24f), () => SendChat("!hint"), out var chatHint);
+            chatHint.fontSize = 11.5f;
+            MakeButton(root, "ChatMissing", "Missing", ChatColor,
+                new Vector2(-100f, -612f), new Vector2(92f, 24f), () => SendChat("!missing"), out var chatMissing);
+            chatMissing.fontSize = 11.5f;
+            MakeButton(root, "ChatGoal", "Goal", ChatColor,
+                new Vector2(0f, -612f), new Vector2(92f, 24f), () => SendChat("!goal"), out var chatGoal);
+            chatGoal.fontSize = 11.5f;
+            MakeButton(root, "ChatRelease", "Release", ChatColor,
+                new Vector2(100f, -612f), new Vector2(92f, 24f), () => SendChat("!release"), out var chatRelease);
+            chatRelease.fontSize = 11.5f;
+            MakeButton(root, "ChatCollect", "Collect", ChatColor,
+                new Vector2(200f, -612f), new Vector2(92f, 24f), () => SendChat("!collect"), out var chatCollect);
+            chatCollect.fontSize = 11.5f;
+
+            var viewport = MakeRect("LogViewport", root);
+            viewport.anchorMin = viewport.anchorMax = new Vector2(0.5f, 1f);
+            viewport.pivot = new Vector2(0.5f, 1f);
+            viewport.anchoredPosition = new Vector2(0f, -470f);
+            viewport.sizeDelta = new Vector2(PanelWidth - 60f, LogHeight);
+
+            var viewportBackground = viewport.gameObject.AddComponent<Image>();
+            viewportBackground.color = new Color(0.05f, 0.05f, 0.08f, 1f);
+            viewport.gameObject.AddComponent<RectMask2D>();
+
+            var content = MakeRect("LogContent", viewport);
+            content.anchorMin = new Vector2(0f, 1f);
+            content.anchorMax = new Vector2(1f, 1f);
+            content.pivot = new Vector2(0.5f, 1f);
+            content.anchoredPosition = Vector2.zero;
+            content.sizeDelta = new Vector2(0f, LogHeight);
+
+            var textRect = MakeRect("LogText", content);
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(10f, 6f);
+            textRect.offsetMax = new Vector2(-10f, -6f);
+
+            _logText = textRect.gameObject.AddComponent<TextMeshProUGUI>();
+            _logText.text = "nothing yet";
+            _logText.fontSize = 13f;
+            _logText.alignment = TextAlignmentOptions.TopLeft;
+            _logText.color = new Color(0.82f, 0.85f, 0.90f, 1f);
+            _logText.enableWordWrapping = true;
+            _logText.richText = true;
+            _logText.raycastTarget = false;
+
+            _logContent = content;
+            _logScroll = viewport.gameObject.AddComponent<ScrollRect>();
+            _logScroll.content = content;
+            _logScroll.viewport = viewport;
+            _logScroll.horizontal = false;
+            _logScroll.vertical = true;
+            _logScroll.movementType = ScrollRect.MovementType.Clamped;
+            _logScroll.inertia = true;
+            _logScroll.decelerationRate = 0.12f;
+            // Wheel input is fed in as velocity (see HandleLogScroll): the built-in
+            // handling jumps a fixed number of pixels per notch and reads as snapping.
+            _logScroll.scrollSensitivity = 0f;
 
             RefreshFieldTexts();
             return root.gameObject;
@@ -599,6 +667,17 @@ namespace SoulstoneAP
 
         // ------------------------------------------------------------------ actions
 
+        private void SendChat(string command)
+        {
+            var runtime = ApRuntime.Instance;
+            if (runtime == null)
+            {
+                _error = "Mod not ready yet.";
+                return;
+            }
+            runtime.SendChat(command);
+        }
+
         private void OnClosePressed()
         {
             _dismissed = true;
@@ -676,15 +755,79 @@ namespace SoulstoneAP
             if (_errorText != null) _errorText.text = _error;
             if (_connectLabel != null) _connectLabel.text = running ? "Disconnect" : "Connect";
 
-            if (_receivedText != null)
+            if (_logText != null)
             {
-                var summary = runtime == null ? "" : runtime.ReceivedSummary;
-                if (summary != _receivedShown)
+                var version = _showConsole
+                    ? ConsoleLog.Version
+                    : (runtime == null ? -1 : runtime.EventLogVersion);
+                if (version != _logVersion)
                 {
-                    _receivedShown = summary;
-                    _receivedText.text = string.IsNullOrEmpty(summary) ? "nothing yet" : summary;
+                    _logVersion = version;
+
+                    // Follow the newest line only when the reader is already at the
+                    // bottom; scrolling up to read must not be yanked away.
+                    var atBottom = _logScroll == null || _logScroll.verticalNormalizedPosition <= 0.02f;
+
+                    var log = _showConsole ? ConsoleLog.Text : (runtime == null ? "" : runtime.EventLog);
+                    _logText.text = string.IsNullOrEmpty(log)
+                        ? (_showConsole ? "no console output yet" : "nothing yet")
+                        : log;
+                    ResizeLog();
+
+                    if (_logScroll != null && atBottom)
+                    {
+                        Canvas.ForceUpdateCanvases();
+                        _logScroll.velocity = Vector2.zero;
+                        _logScroll.verticalNormalizedPosition = 0f;
+                    }
                 }
             }
+        }
+
+        /// <summary>0 = checks, 1 = console.</summary>
+        private void SetView(int view)
+        {
+            var console = view == 1;
+            if (_showConsole == console) return;
+            _showConsole = console;
+            _logVersion = int.MinValue;
+            RefreshStatus();
+        }
+
+        /// <summary>
+        /// Wheel over the log adds to the ScrollRect's velocity, so the content glides
+        /// in small steps instead of jumping a page per notch. Polled from the Input
+        /// System rather than handled through OnScroll because the game's own UI also
+        /// listens for scroll events.
+        /// </summary>
+        private void HandleLogScroll()
+        {
+            if (_logScroll == null || _logScroll.viewport == null) return;
+
+            var mouse = Mouse.current;
+            if (mouse == null) return;
+
+            if (!RectTransformUtility.RectangleContainsScreenPoint(
+                    _logScroll.viewport, mouse.position.ReadValue(), null)) return;
+
+            // Windows reports about 120 units per notch; trackpads report less, which
+            // naturally gives them finer steps.
+            var notches = mouse.scroll.ReadValue().y / 120f;
+            if (Mathf.Abs(notches) < 0.01f) return;
+
+            // Wheel up (positive notches) has to reveal earlier lines, which means
+            // dragging the content down, so the sign is inverted against the wheel.
+            var velocity = _logScroll.velocity;
+            velocity.y = Mathf.Clamp(velocity.y - notches * 90f, -900f, 900f);
+            _logScroll.velocity = velocity;
+        }
+
+        /// <summary>Grows the scroll content to the text, so every line can be reached.</summary>
+        private void ResizeLog()
+        {
+            if (_logContent == null || _logText == null) return;
+            var height = Mathf.Max(LogHeight, _logText.preferredHeight + 14f);
+            _logContent.sizeDelta = new Vector2(_logContent.sizeDelta.x, height);
         }
 
         // ------------------------------------------------------------------ logo

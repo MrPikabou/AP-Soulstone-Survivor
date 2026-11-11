@@ -166,7 +166,7 @@ namespace SoulstoneAP
         {
             try
             {
-                if (_player != null && _player._stats != null)
+                if (_player != null && (power.NoStats || _player._stats != null))
                 {
                     power.Apply(_player, _player._stats);
                     Log?.LogInfo($"AP: cursed power chosen: {power.Name} ({power.Effect})");

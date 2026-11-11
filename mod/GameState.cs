@@ -109,6 +109,61 @@ namespace SoulstoneAP
             }
         }
 
+        /// <summary>
+        /// True when the seed ships crafting licences: the blacksmith only crafts a
+        /// character's weapons after `Craft: <Character>` has arrived. When false
+        /// the weapon items themselves are the only route, as before.
+        /// </summary>
+        public static bool CraftLicences;
+
+        /// <summary>Characters whose weapons this save may craft locally.</summary>
+        public static readonly HashSet<string> LicensedCrafters = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>`WeaponBarbarian-02` -> `Barbarian`.</summary>
+        public static string CharacterOfWeapon(string weaponId)
+        {
+            if (string.IsNullOrEmpty(weaponId)) return null;
+            var id = weaponId.StartsWith("Weapon", StringComparison.OrdinalIgnoreCase)
+                ? weaponId.Substring("Weapon".Length)
+                : weaponId;
+            var dash = id.IndexOf('-');
+            return dash > 0 ? id.Substring(0, dash) : id;
+        }
+
+        /// <summary>May this save craft this weapon without owning it?</summary>
+        public static bool CanCraft(string weaponId)
+        {
+            if (!CraftLicences) return false;
+            var character = CharacterOfWeapon(weaponId);
+            return !string.IsNullOrEmpty(character) && LicensedCrafters.Contains(character);
+        }
+
+        public static void LoadLicences()
+        {
+            LicensedCrafters.Clear();
+            var raw = Plugin.LicensedCrafters?.Value;
+            if (string.IsNullOrEmpty(raw)) return;
+            foreach (var part in raw.Split(','))
+            {
+                var name = part.Trim();
+                if (!string.IsNullOrEmpty(name)) LicensedCrafters.Add(name);
+            }
+        }
+
+        public static void SaveLicences()
+        {
+            if (Plugin.LicensedCrafters == null) return;
+            Plugin.LicensedCrafters.Value = string.Join(",", LicensedCrafters);
+            Plugin.Instance?.Config.Save();
+        }
+
+        /// <summary>Forgets licences when the seed changes; the new seed sends its own.</summary>
+        public static void ResetLicences()
+        {
+            LicensedCrafters.Clear();
+            SaveLicences();
+        }
+
         private static bool TryGetProfile(out PlayerProfile profile, out string error)
         {
             profile = null;
@@ -151,12 +206,21 @@ namespace SoulstoneAP
 
         // ---------------------------------------------------------------- state
 
+        private static readonly GameSnapshot _snapshot = new GameSnapshot();
+
         /// <summary>Lightweight snapshot used by the in-game client for check detection.</summary>
         public static GameSnapshot Snapshot()
         {
             if (!TryGetProfile(out var profile, out _)) return null;
 
-            var snapshot = new GameSnapshot();
+            // The check reporter runs this once a second. Reuse the container and
+            // its lists instead of rebuilding the whole snapshot every poll.
+            var snapshot = _snapshot;
+            snapshot.Maps.Clear();
+            snapshot.Achievements.Clear();
+            snapshot.Matches.Clear();
+            snapshot.Rituals.Clear();
+            snapshot.Sigils.Clear();
 
             try
             {
@@ -578,6 +642,19 @@ namespace SoulstoneAP
                         RefreshWeaponScreens();
                         return "OK unlocked weapon " + id;
                     }
+                    case "craft":
+                    {
+                        if (string.IsNullOrEmpty(id)) return "ERR missing character";
+                        if (LicensedCrafters.Contains(id)) return "OK already licensed " + id;
+
+                        LicensedCrafters.Add(id);
+                        SaveLicences();
+                        Log?.LogInfo($"granted crafting licence for {id}");
+
+                        // The blacksmith panel reads the licence when it is next
+                        // opened, so nothing has to be refreshed here.
+                        return "OK crafting licence " + id;
+                    }
                     case "curse":
                     {
                         // Curse:<n>: unlock curse tiers 1..n on every map. The game
@@ -964,6 +1041,26 @@ namespace SoulstoneAP
                 case "rogue": return "RogueSoulstones";
                 default: return key ?? "";
             }
+        }
+
+        /// <summary>Does the loaded save own this character? Used by the browser.</summary>
+        /// <summary>Rune ids the save has unlocked, whether bought or sent as an item.</summary>
+        public static List<string> OwnedRunes()
+        {
+            return TryGetProfile(out var profile, out _) ? RuneNodes.Owned(profile) : new List<string>();
+        }
+
+        public static bool ProfileHasCharacter(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !TryGetProfile(out var profile, out _)) return false;
+            return HasCharacter(profile, id);
+        }
+
+        /// <summary>Does the loaded save have this map's progression entry?</summary>
+        public static bool ProfileHasMap(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !TryGetProfile(out var profile, out _)) return false;
+            return HasMap(profile, id);
         }
 
         private static bool HasMap(PlayerProfile profile, string mapId)
